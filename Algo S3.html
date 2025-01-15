@@ -1,0 +1,1219 @@
+<!DOCTYPE HTML>
+<!--
+	Hyperspace by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Algo 3</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Header -->
+			<header id="header">
+				<a href="index.html" class="title">Portfolio Cyber</a>
+				<nav>
+					<ul>
+						<li><a href="Accueil.html">Accueil</a></li>
+						<li><a href="a-propos.html">À propos</a></li>
+						<li><a href="mois-cyber.html" >Le mois de la cyber</a></li>
+						<li><a href="Contact.html" >Contact</a></li>
+					</ul>
+				</nav>
+			</header>
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<section id="main" class="wrapper">
+						<div class="inner">
+							<h1 class="major">Algo 3</h1>
+							<h2>Main</h2>
+							<p>import tkinter as tk
+								from tkinter import messagebox
+								from tkinter import Toplevel
+								from tkinter import ttk
+								import fonctions_com as fonctions_com
+								import fonctions_produits as fonctions_produits
+								import csv
+								import hashlib
+								import os
+								import pandas as pd
+								fichier_users = "data/users.csv"
+								
+								
+								def info_user(id):
+									with open(fichier_users, 'r', encoding='utf-8') as fichier:
+										tab = list(csv.reader(fichier))
+									for ligne in tab:
+										if ligne[0] == id:
+											nom = ligne[1].strip()
+											prenom = ligne[2].strip()
+											email = ligne[3].strip()
+									user = (id, nom, prenom, email)
+									return user
+								
+								# Fonction pour afficher l'écran de connexion
+								def afficher_connexion():
+									clear_window()
+								
+									# Configurer la grille principale
+									root.grid_rowconfigure(0, weight=1)  # Espace pour le haut (titre)
+									root.grid_rowconfigure(1, weight=2)  # Espace pour le milieu (champs de texte)
+									root.grid_rowconfigure(2, weight=1)  # Espace pour le bas (boutons)
+									root.grid_columnconfigure(0, weight=1)  # Centrer les éléments horizontalement
+								
+									# Texte "Connexion" tout en haut
+									tk.Label(root, text="Connexion", font=("Arial", 24)).grid(row=0, column=0, pady=10, sticky="n")
+								
+									# Zone pour les champs de texte (au milieu)
+									frame_champs = tk.Frame(root)
+									frame_champs.grid(row=1, column=0, pady=20)
+								
+									email_entry = creer_champ_texte("Email", parent=frame_champs)
+									mdp_entry = creer_champ_texte("Mot de passe", parent=frame_champs, show="*")
+								
+									# Boutons en bas
+									frame_boutons = tk.Frame(root)
+									frame_boutons.grid(row=2, column=0, pady=20)
+								
+									def valider_connexion():
+										email = email_entry.get()
+										mdp = mdp_entry.get()
+										# Connexion de l'utilisateur
+										user = fonctions_com.connect(email, mdp)
+										if user is None:
+											return
+										afficher_gestion(user)
+								
+									# Ajouter les boutons dans le frame des boutons
+									tk.Button(frame_boutons, text="Se connecter", fg="#ffffff", bg="#5cb85c", font=("Arial", 14), command=valider_connexion).pack(side="left", padx=10)
+									tk.Button(frame_boutons, text="Retour", fg="#ffffff", bg="#d9534f", font=("Arial", 14), command=afficher_accueil).pack(side="left", padx=10)
+								
+								# Fonction pour afficher la gestion
+								def afficher_gestion(user):
+									clear_window()
+								
+									id = user[0]
+									nom = user[1]
+									prenom = user[2]
+									email = user[3]
+								
+									# Configurer la grille principale
+									root.grid_rowconfigure(0, weight=1)  # Espace pour le haut (titre)
+									root.grid_rowconfigure(1, weight=1)  # Espace pour le milieu (boutons)
+									root.grid_columnconfigure(0, weight=1)  # Centrer les éléments horizontalement
+								
+									# Texte "Menu Principal" tout en haut
+									tk.Label(root, text="Menu Principal", font=("Arial", 24)).grid(row=0, column=0, pady=(10, 0), sticky="n")
+									tk.Label(root, text="Que souhaitez-vous faire ?", font=("Arial", 20)).grid(row=1, column=0, pady=(0, 0), sticky="n")
+								
+									# Bouton au milieu
+									frame_boutons = tk.Frame(root)
+									frame_boutons.grid(row=1, column=0, pady=20)
+								
+									# Ajouter les boutons dans le frame des boutons
+									tk.Button(frame_boutons, text="Gestion de produits", fg="#ffffff", bg="#6495ed", font=("Arial", 14), command=lambda:interaction(id)).pack(side="left", padx=10)
+									tk.Button(frame_boutons, text="Gestion de compte", fg="#ffffff", bg="#9683ec", font=("Arial", 14), command=lambda:afficher_gestion_compte(id)).pack(side="left", padx=10)
+									tk.Button(frame_boutons, text="Déconnexion", fg="#ffffff", bg="#d9534f", font=("Arial", 14), command=afficher_accueil).pack(side="left", padx=10)
+								
+								
+								def ajouter_produit(id):
+									# Fonction pour charger les produits
+									fichier = fonctions_produits.charger_produits(id)
+									
+									def enregistrer_produit():
+										try:
+											nom = entry_nom.get().strip()
+											prix = float(entry_prix.get().strip())
+											stock = int(entry_stock.get().strip())
+											
+											# Vérification si les champs sont remplis
+											if not nom:
+												messagebox.showerror("❌ Erreur", "Le nom du produit ne peut pas être vide.")
+												return
+											if prix < 0:
+												messagebox.showerror("❌ Erreur", "Le prix doit être supérieur à zéro.")
+												return
+											if stock < 0:
+												messagebox.showerror("❌ Erreur", "Le stock ne peut pas être négatif.")
+												return
+											
+											# Création du nouveau produit à ajouter
+											nouveau_produit = pd.DataFrame([[nom, prix, stock]], columns=["Nom", "Prix", "Stock"])
+											
+											# Chargement des produits existants et ajout du nouveau produit
+											try:
+												produits_df = pd.read_csv(fichier)
+												produits_df = pd.concat([produits_df, nouveau_produit], ignore_index=True)
+											except FileNotFoundError:
+												produits_df = nouveau_produit
+												
+											produits_df.to_csv(fichier, index=False)
+								
+											# Affichage du message de succès
+											messagebox.showinfo("Succès", "✅ Produit ajouté avec succès !")
+								
+											# Vider les champs pour ajouter un autre produit
+											entry_nom.delete(0, tk.END)
+											entry_prix.delete(0, tk.END)
+											entry_stock.delete(0, tk.END)
+								
+											# Maintenir la fenêtre au premier plan
+											add_window.lift()
+											add_window.attributes("-topmost", True)
+											add_window.after(1, lambda: add_window.attributes("-topmost", False))
+								
+										except ValueError:
+											messagebox.showerror("❌ Erreur", "Veuillez entrer des valeurs valides pour le prix et le stock.")
+								
+									def quitter():
+										# Fermer la fenêtre d'ajout de produit
+										add_window.destroy()
+								
+									# Créer la fenêtre d'ajout de produit
+									add_window = tk.Toplevel(root)
+									add_window.title("Ajouter un produit")
+									add_window.geometry("400x300")
+								
+									# Centrer la fenêtre au milieu de l'écran
+									add_window.update_idletasks()
+									window_width = add_window.winfo_width()
+									window_height = add_window.winfo_height()
+									screen_width = add_window.winfo_screenwidth()
+									screen_height = add_window.winfo_screenheight()
+								
+									x = (screen_width // 2) - (window_width // 2)
+									y = (screen_height // 2) - (window_height // 2)
+									add_window.geometry(f"{window_width}x{window_height}+{x}+{y}")
+								
+									# Labels et champs de saisie
+									tk.Label(add_window, text="Nom du produit :").pack(pady=5)
+									entry_nom = tk.Entry(add_window, font=("Arial", 14))
+									entry_nom.pack(pady=5)
+								
+									tk.Label(add_window, text="Prix du produit :").pack(pady=5)
+									entry_prix = tk.Entry(add_window, font=("Arial", 14))
+									entry_prix.pack(pady=5)
+								
+									tk.Label(add_window, text="Stock disponible :").pack(pady=5)
+									entry_stock = tk.Entry(add_window, font=("Arial", 14))
+									entry_stock.pack(pady=5)
+								
+									# Boutons de validation et de fermeture
+									button_valider = tk.Button(add_window, text="Valider", fg="#ffffff", bg="#5cb85c", font=("Arial", 14), command=enregistrer_produit)
+									button_valider.pack(side="left", padx=10, pady=20)
+								
+									button_quitter = tk.Button(add_window, text="Quitter", fg="#ffffff", bg="#d9534f", font=("Arial", 14), command=quitter)
+									button_quitter.pack(side="right", padx=10, pady=20)
+								
+									# Maintenir la fenêtre au premier plan à l'ouverture
+									add_window.lift()
+									add_window.attributes("-topmost", True)
+									add_window.after(1, lambda: add_window.attributes("-topmost", False))
+								
+								
+								def lire_produits(id):
+									fichier = fonctions_produits.charger_produits(id)
+									
+									try:
+										produits_df = pd.read_csv(fichier)
+										if produits_df.empty:
+											messagebox.showinfo("Produits", "😶‍🌫️  Le fichier est vide.")
+										else:
+											produits_text = ""
+											for index, row in produits_df.iterrows():
+												produits_text += f"{index}. {row['Nom']}, {row['Prix']}€, {row['Stock']} en stock\n"
+								
+											messagebox.showinfo("Liste des produits", produits_text)
+									except FileNotFoundError:
+										messagebox.showerror("❌ Erreur", "⚠️  Le fichier n'a pas été trouvé.")
+								
+								
+								def suppr_produits(id):
+									fichier = fonctions_produits.charger_produits(id)
+									
+									def afficher_produits():
+										try:
+											produits_df = pd.read_csv(fichier)
+											if produits_df.empty:
+												produits_list.set("😶‍🌫️  Le fichier est vide.")
+												return
+											
+											# Construction de la liste des produits sous forme de texte
+											produits_text = ""
+											for index, row in produits_df.iterrows():
+												produits_text += f"{index}. {row['Nom']}, {row['Prix']}€, {row['Stock']} en stock\n"
+											
+											produits_list.set(produits_text)
+										except FileNotFoundError:
+											produits_list.set("⚠️  Le fichier n'a pas été trouvé.")
+									
+									def confirmer_suppression():
+										try:
+											choix_suppr = entry_choix.get().strip()
+											produits_df = pd.read_csv(fichier)  # Recharger les produits
+											if choix_suppr == "all":
+												produits_df = produits_df.iloc[0:0]  # Supprimer tous les produits
+												messagebox.showinfo("Succès", "✅  Tous les produits ont été supprimés.")
+											else:
+												try:
+													choix_suppr = int(choix_suppr)
+													if choix_suppr < 0 or choix_suppr >= len(produits_df):
+														messagebox.showerror("❌ Erreur", "⚠️  Renseignez un numéro de produit valide.")
+														entry_choix.delete(0, tk.END)  # Vider le champ de saisie après une erreur
+														delete_window.lift()  # Ramener la fenêtre au premier plan
+														delete_window.attributes("-topmost", True)
+														delete_window.after(1, lambda: delete_window.attributes("-topmost", False))  # Revenir à l'état normal
+														return
+													produits_df = produits_df.drop(choix_suppr)
+													messagebox.showinfo("Succès", f"✅  Le produit numéro {choix_suppr} a été supprimé.")
+												except ValueError:
+													messagebox.showerror("❌ Erreur", "⚠️  Renseignez un numéro valide ou 'all'.")
+													entry_choix.delete(0, tk.END)  # Vider le champ de saisie après une erreur
+													delete_window.lift()  # Ramener la fenêtre au premier plan
+													delete_window.attributes("-topmost", True)
+													delete_window.after(1, lambda: delete_window.attributes("-topmost", False))  # Revenir à l'état normal
+													return
+											produits_df.to_csv(fichier, index=False)
+											afficher_produits()  # Actualiser la liste des produits après suppression
+											
+											# Vider le champ de saisie après la suppression
+											entry_choix.delete(0, tk.END)
+								
+											# Garder la fenêtre au premier plan après la suppression
+											delete_window.lift()
+											delete_window.attributes("-topmost", True)
+											delete_window.after(1, lambda: delete_window.attributes("-topmost", False))
+										except FileNotFoundError:
+											messagebox.showerror("❌ Erreur", "⚠️  Le fichier n'a pas été trouvé.")
+									
+									# Créer la fenêtre de suppression de produit
+									delete_window = tk.Toplevel(root)
+									delete_window.title("Supprimer un produit")
+									delete_window.geometry("500x400")
+								
+									# Variable pour afficher la liste des produits
+									produits_list = tk.StringVar()
+									produits_list.set("Chargement des produits...")
+								
+									# Label pour afficher la liste des produits
+									label_produits = tk.Label(delete_window, textvariable=produits_list, justify="left", font=("Arial", 12))
+									label_produits.pack(pady=20)
+								
+									# Afficher les produits au chargement de la fenêtre
+									afficher_produits()
+								
+									# Champ de saisie pour choisir le produit à supprimer
+									label_choix = tk.Label(delete_window, text="Numéro du produit à supprimer (ou 'all' pour tout supprimer) :")
+									label_choix.pack(pady=5)
+								
+									entry_choix = tk.Entry(delete_window, font=("Arial", 14))
+									entry_choix.pack(pady=5)
+								
+									# Bouton pour confirmer la suppression
+									button_confirmer = tk.Button(delete_window, text="Confirmer la suppression", fg="#ffffff", bg="#5cb85c", font=("Arial", 14), command=confirmer_suppression)
+									button_confirmer.pack(pady=10)
+								
+									# Bouton quitter pour fermer la fenêtre
+									button_quitter = tk.Button(delete_window, text="Quitter", fg="#ffffff", bg="#d9534f", font=("Arial", 14), command=delete_window.destroy)
+									button_quitter.pack(pady=10)
+								
+								
+								# Fonction pour la recherche d'un produit
+								def recherche(id):
+									fichier = fonctions_produits.charger_produits(id)
+								
+									def rechercher_produit():
+										valeur_a_rechercher = entry_nom_produit.get().strip().lower()
+										try:
+											produits_df = pd.read_csv(fichier)
+											if produits_df.empty:
+												messagebox.showinfo("Information", "Le fichier est vide.")
+												entry_nom_produit.delete(0, tk.END)  # Vider le champ de saisie
+												fenetre.lift()  # Garder la fenêtre au premier plan
+												fenetre.attributes("-topmost", True)
+												fenetre.after(1, lambda: fenetre.attributes("-topmost", False))
+												return
+								
+											produit_trouve = produits_df[produits_df['Nom'].str.lower() == valeur_a_rechercher]
+											if not produit_trouve.empty:
+												resultat = produit_trouve.to_string(index=False)
+												text_resultat.config(state="normal")
+												text_resultat.delete(1.0, tk.END)
+												text_resultat.insert(tk.END, f"Produit trouvé :\n{resultat}")
+												text_resultat.config(state="disabled")
+											else:
+												messagebox.showwarning("Aucun résultat", "Aucun produit trouvé avec ce nom.")
+												fenetre.lift()  # Garder la fenêtre au premier plan
+												fenetre.attributes("-topmost", True)
+												fenetre.after(1, lambda: fenetre.attributes("-topmost", False))
+								
+											entry_nom_produit.delete(0, tk.END)  # Vider le champ de saisie après la recherche
+										except FileNotFoundError:
+											messagebox.showerror("❌ Erreur", "Le fichier n'a pas été trouvé.")
+											fenetre.lift()  # Garder la fenêtre au premier plan
+											fenetre.attributes("-topmost", True)
+											fenetre.after(1, lambda: fenetre.attributes("-topmost", False))
+										except Exception as e:
+											messagebox.showerror("❌ Erreur", f"Une erreur est survenue : {e}")
+											fenetre.lift()  # Garder la fenêtre au premier plan
+											fenetre.attributes("-topmost", True)
+											fenetre.after(1, lambda: fenetre.attributes("-topmost", False))
+								
+									def quitter():
+										fenetre.destroy()
+								
+									fenetre = tk.Tk()
+									fenetre.title("Recherche de Produit")
+								
+									# Champ de saisie pour le nom du produit
+									label_nom_produit = tk.Label(fenetre, text="Nom du produit :", font=("Arial", 12))
+									label_nom_produit.pack(pady=5)
+								
+									entry_nom_produit = tk.Entry(fenetre, width=25, font=("Arial", 14))
+									entry_nom_produit.pack(pady=5)
+								
+									# Bouton Valider
+									bouton_valider = tk.Button(fenetre, text="Valider", font=("Arial", 14), fg="#ffffff", bg="#5cb85c",command=rechercher_produit, width=5)
+									bouton_valider.pack(pady=5)
+								
+									# Zone de texte pour afficher les résultats
+									text_resultat = tk.Text(fenetre, height=10, width=50, font=("Arial", 12), state="disabled")
+									text_resultat.pack(pady=10)
+								
+									# Bouton Quitter
+									bouton_quitter = tk.Button(fenetre, text="Quitter", font=("Arial", 14), fg="#ffffff", bg="#d9534f", command=quitter, width=5)
+									bouton_quitter.pack(pady=5)
+								
+								
+								# Fonction pour trier les produits
+								def trier(id):
+									fichier = fonctions_produits.charger_produits(id)
+								
+									def appliquer_tri():
+										selection = tri_var.get()
+										try:
+											if selection == 1:
+												produits_df, message = fonctions_produits.trier_nom(id)
+											elif selection == 2:
+												produits_df, message = fonctions_produits.trier_prix(id)
+											elif selection == 3:
+												produits_df, message = fonctions_produits.trier_stock(id)
+											else:
+												raise ValueError("Aucun critère de tri sélectionné.")
+											
+											# Vérification si le DataFrame est vide ou inexistant
+											if produits_df is None or produits_df.empty:
+												resultat = message if produits_df is None else "😶‍🌫️ Aucun produit à afficher après le tri."
+											else:
+												resultat = f"{message}\n\n" + produits_df.to_string(index=False)
+								
+										except FileNotFoundError:
+											resultat = "⚠️ Le fichier des produits est introuvable."
+										except Exception as e:
+											resultat = f"❌ Une erreur est survenue : {e}"
+								
+										# Mise à jour de la zone de texte avec le résultat
+										texte_resultat.config(state="normal")
+										texte_resultat.delete("1.0", tk.END)
+										texte_resultat.insert(tk.END, resultat)
+										texte_resultat.config(state="disabled")
+								
+									# Création de la nouvelle fenêtre
+									fenetre = tk.Toplevel()
+									fenetre.title("Tri des Produits")
+									fenetre.geometry("600x600")
+								
+									tri_var = tk.IntVar()
+								
+									# Boutons radio pour choisir le critère de tri
+									tk.Radiobutton(fenetre, text="Trier par Nom", variable=tri_var, value=1).pack(anchor="w", padx=20, pady=5)
+									tk.Radiobutton(fenetre, text="Trier par Prix", variable=tri_var, value=2).pack(anchor="w", padx=20, pady=5)
+									tk.Radiobutton(fenetre, text="Trier par Stock", variable=tri_var, value=3).pack(anchor="w", padx=20, pady=5)
+								
+									# Bouton pour appliquer le tri
+									bouton_appliquer = tk.Button(
+										fenetre, 
+										text="Appliquer le tri", 
+										command=appliquer_tri, 
+										bg="#5cb85c", 
+										fg="white", 
+										font=("Arial", 12), 
+										height=2, 
+										width=20
+									)
+									bouton_appliquer.pack(pady=10)
+								
+									# Zone pour afficher les résultats
+									texte_resultat = tk.Text(fenetre, height=15, width=70, font=("Arial", 10), state="disabled")
+									texte_resultat.pack(pady=10)
+								
+									# Bouton pour fermer la fenêtre
+									bouton_fermer = tk.Button(
+										fenetre, 
+										text="Fermer", 
+										command=fenetre.destroy, 
+										bg="#d9534f", 
+										fg="white", 
+										font=("Arial", 12), 
+										height=2, 
+										width=20
+									)
+									bouton_fermer.pack(pady=10)
+								
+								
+								def interaction(id):
+									clear_window()
+								
+									# Configurer la grille principale
+									root.grid_rowconfigure(0, weight=1)  # Espace pour le haut (titre)
+									root.grid_rowconfigure(1, weight=1)  # Espace pour le milieu (boutons)
+									root.grid_columnconfigure(0, weight=1)  # Centrer les éléments horizontalement
+								
+									# Texte "Bienvenue sur votre logiciel de gestions de produits" tout en haut
+									tk.Label(root, text="Bienvenue sur votre logiciel de gestions de produits", font=("Arial", 24)).grid(row=0, column=0, pady=(10, 0), sticky="n")
+									tk.Label(root, text="Que souhaitez-vous faire ?", font=("Arial", 20)).grid(row=1, column=0, pady=(0, 0), sticky="n")
+								
+									# Liste des options disponibles pour le menu déroulant
+									options = [
+										"Ajouter des produits",
+										"Voir les produits",
+										"Supprimer un produit",
+										"Rechercher un produit",
+										"Trier les produits"
+									]
+								
+									selected_option = tk.StringVar(root)
+									selected_option.set(options[0])
+								
+									# Créer le menu déroulant
+									dropdown = tk.OptionMenu(root, selected_option, *options)
+								
+									dropdown.config(font=("Arial", 16), width=20)
+									dropdown.grid(row=1, column=0, pady=20)
+								
+									# Fonction pour gérer l'action en fonction de la sélection du menu déroulant
+									def handle_selection():
+										choice = selected_option.get()
+										if choice == "Ajouter des produits":
+											ajouter_produit(id)
+										elif choice == "Voir les produits":
+											lire_produits(id)
+										elif choice == "Supprimer un produit":
+											suppr_produits(id)
+										elif choice == "Rechercher un produit":
+											recherche(id)
+										elif choice == "Trier les produits":
+											trier(id)
+								
+									# Ajouter un bouton pour valider la sélection
+									validate_button = tk.Button(root, text="Valider", fg="#ffffff", bg="#5cb85c", font=("Arial", 14), command=handle_selection)
+									validate_button.grid(row=3, column=0, pady=20)
+								
+									# Fonction de quitter avec message pop-up
+									def quitter():
+										messagebox.showinfo("Merci", "✅ Merci d'avoir utilisé le gestionnaire de produits !\n\n©️ Baptiste AUSSANT & Elisabeth RIVIERE - 2024 / 2025")
+										afficher_gestion(info_user(id))
+								
+									# Ajouter un bouton pour quitter
+									quit_button = tk.Button(root, text="Quitter", fg="#ffffff", bg="#d9534f", font=("Arial", 14), command=quitter)
+									quit_button.grid(row=4, column=0, pady=10)
+								
+									# Bouton au milieu
+									frame_boutons = tk.Frame(root)
+									frame_boutons.grid(row=1, column=0, pady=20)
+								
+								# Fonction pour afficher la gestion du compte
+								def afficher_gestion_compte(id):
+									clear_window()
+									info_user(id)
+								
+									# Configurer la grille principale
+									root.grid_rowconfigure(0, weight=1)  # Espace pour le haut (titre)
+									root.grid_rowconfigure(1, weight=1)  # Espace pour le milieu (boutons)
+									root.grid_columnconfigure(0, weight=1)  # Centrer les éléments horizontalement
+								
+									# Texte "Menu de Gestion du Compte" tout en haut
+									tk.Label(root, text="Menu de Gestion du Compte", font=("Arial", 24)).grid(row=0, column=0, pady=(10, 0), sticky="n")
+									tk.Label(root, text="Que souhaitez-vous faire ?", font=("Arial", 20)).grid(row=1, column=0, pady=(0, 0), sticky="n")
+								
+									# Bouton au milieu
+									frame_boutons = tk.Frame(root)
+									frame_boutons.grid(row=1, column=0, pady=20)
+								
+									# Ajouter les boutons dans le frame des boutons
+									tk.Button(frame_boutons, text="Modifier mon compte", fg="#ffffff", bg="#6495ed", font=("Arial", 14), command=lambda:edit_com(id)).pack(side="left", padx=10)
+									tk.Button(frame_boutons, text="Supprimer mon compte", fg="#ffffff", bg="#9683ec", font=("Arial", 14), command=lambda:del_com(id)).pack(side="left", padx=10)
+									tk.Button(frame_boutons, text="Quitter", fg="#ffffff", bg="#d9534f", font=("Arial", 14), command=lambda:afficher_gestion(info_user(id))).pack(side="left", padx=10)
+								
+								
+								def edit_com(id):
+									try:
+										id = int(id)
+										with open(fichier_users, 'r', newline='', encoding='utf-8') as fichier:
+											tab = list(csv.reader(fichier))
+								
+										if id < 0 or id >= len(tab):
+											print("❌ L'index 'id' est hors de portée.")
+											return
+								
+										emails_existants = [ligne[3] for i, ligne in enumerate(tab) if i != id and len(ligne) > 3]
+								
+										def modifier(champ):
+											"""Ouvre une fenêtre pour modifier un champ spécifique."""
+											def save_modification():
+												modif = entry.get().strip()
+												if champ == "NOM":
+													if not modif:
+														messagebox.showerror("❌ Erreur", "❌ Le nom ne peut pas être vide.", parent=new_window)
+														new_window.lift()
+														return
+												elif champ == "PRENOM":
+													if not modif:
+														messagebox.showerror("❌ Erreur", "❌ Le prénom ne peut pas être vide.", parent=new_window)
+														new_window.lift()
+														return
+												elif champ == "MAIL":
+													if not fonctions_com.verifier_adresse_email(modif):
+														messagebox.showerror("❌ Erreur", "❌ L'adresse mail est invalide.", parent=new_window)
+														new_window.lift()
+														return
+													if modif in emails_existants:
+														messagebox.showerror("❌ Erreur", "❌ Adresse mail déjà utilisée.", parent=new_window)
+														new_window.lift()
+														return
+												elif champ == "MOT DE PASSE":
+													if not modif:
+														messagebox.showerror("❌ Erreur", "❌ Le mot de passe ne peut pas être vide.", parent=new_window)
+														new_window.lift()
+														return
+													mdp_hash = hashlib.sha256(modif.encode('utf-8')).hexdigest()
+													if fonctions_com.compare(mdp_hash):
+														messagebox.showerror("❌ Erreur", "❌ Mot de passe compromis. Choisissez-en un autre.", parent=new_window)
+														new_window.lift()
+														return
+													sel_ = fonctions_com.sel()
+													modif = hashlib.sha256((modif + sel_).encode('utf-8')).hexdigest()
+													tab[id][5] = sel_
+								
+												# Sauvegarde de la modification
+												champ_index = {"NOM": 1, "PRENOM": 2, "MAIL": 3, "MOT DE PASSE": 4}
+												tab[id][champ_index[champ]] = modif
+												with open(fichier_users, 'w', newline='', encoding='utf-8') as fichier:
+													csv.writer(fichier).writerows(tab)
+												messagebox.showinfo("Succès", f"✅ {champ.capitalize()} modifié avec succès.", parent=new_window)
+												new_window.destroy()
+								
+											# Fenêtre de modification
+											new_window = Toplevel(root)
+											new_window.title(f"Modifier {champ}")
+											new_window.geometry("400x200")
+								
+											label = tk.Label(new_window, text=f"Nouveau {champ} :")
+											label.pack(pady=10)
+								
+											entry = tk.Entry(new_window, show="*" if champ == "MOT DE PASSE" else "")
+											entry.pack(pady=10)
+								
+											save_button = tk.Button(new_window, text="Enregistrer", fg="#ffffff", bg="#5cb85c", command=save_modification)
+											save_button.pack(pady=10)
+								
+											close_button = tk.Button(new_window, text="Fermer", fg="#ffffff", bg="#d9534f", command=new_window.destroy)
+											close_button.pack(pady=10)
+								
+										# Interface principale de choix avec un menu déroulant
+										choix_window = Toplevel(root)
+										choix_window.title("Modifier l'utilisateur")
+										choix_window.geometry("400x200")
+								
+										tk.Label(choix_window, text="Choisissez le champ à modifier :").pack(pady=10)
+								
+										# Liste des champs disponibles
+										options = ["NOM", "PRENOM", "MAIL", "MOT DE PASSE"]
+										selected_option = tk.StringVar(choix_window)
+										selected_option.set(options[0])  # Valeur par défaut
+								
+										dropdown = tk.OptionMenu(choix_window, selected_option, *options)
+										dropdown.pack(pady=10)
+								
+										# Bouton pour valider le choix
+										validate_button = tk.Button(choix_window, text="Modifier", fg="#ffffff", bg="#5cb85c", command=lambda: [choix_window.destroy(), modifier(selected_option.get())])
+										validate_button.pack(pady=10)
+								
+										close_button = tk.Button(choix_window, text="Fermer", fg="#ffffff", bg="#d9534f", command=choix_window.destroy)
+										close_button.pack(pady=10)
+								
+									except ValueError:
+										print("❌ Entrez un choix valide.")
+									except FileNotFoundError:
+										print("\n❌ Le fichier utilisateur est introuvable.")
+								
+								
+								# Fonction pour supprimer un compte
+								def del_com(id):
+									try:
+										id = int(id)
+								
+										def confirm_deletion():
+											verif = messagebox.askyesno(
+												"Confirmation requise", 
+												"🚨 Souhaitez-vous VRAIMENT supprimer votre compte ?"
+											)
+											if verif:
+												try:
+													with open(fichier_users, 'r', newline='', encoding='utf-8') as fichier:
+														tab = list(csv.reader(fichier))
+													
+													if 0 <= id < len(tab):
+														tab[id] = [' ', ' ', ' ', ' ', ' ', ' ']
+													else:
+														messagebox.showerror("❌ Erreur", f"❌ L'id {id} est hors de portée.")
+														return
+								
+													with open(fichier_users, 'w', newline='', encoding='utf-8') as fichier:
+														ecrivain = csv.writer(fichier)
+														for i in range(len(tab)):
+															ecrivain.writerow(tab[i])
+								
+													os.remove(f"data/produits_commercants/produits-{id}.csv")
+								
+													messagebox.showinfo("Succès", "✅ Votre compte a bien été supprimé.")
+													os._exit(0)
+								
+												except FileNotFoundError:
+													messagebox.showerror("❌ Erreur", "⚠️ Le fichier n'a pas été trouvé.")
+													return
+											else:
+												messagebox.showinfo("Annulé", "⏪ L'opération a été annulée.")
+								
+										confirmation_window = tk.Toplevel(root)
+										confirmation_window.title("Confirmation de suppression")
+										confirmation_window.geometry("400x200")
+								
+										label = tk.Label(confirmation_window, text="Souhaitez-vous vraiment supprimer votre compte ?\nCette action est irréversible.", font=("Arial", 12))
+										label.pack(pady=20)
+								
+										yes_button = tk.Button(confirmation_window, text="💀 Oui", fg="#ffffff", bg="#d9534f", font=("Arial", 14), command=confirm_deletion)
+										yes_button.pack(side="left", padx=20, pady=10)
+								
+										no_button = tk.Button(confirmation_window, text="😮‍💨 Non", fg="#ffffff", bg="#5cb85c", font=("Arial", 14), command=confirmation_window.destroy)
+										no_button.pack(side="right", padx=20, pady=10)
+								
+									except ValueError:
+										messagebox.showerror("❌ Erreur", f"❌ L'id {id} n'est pas un entier valide.")
+										return
+								
+								# Fonction pour afficher l'écran d'inscription
+								def afficher_inscription():
+									clear_window()
+								
+									# Configurer la grille principale
+									root.grid_rowconfigure(0, weight=1)  # Espace pour le haut (titre)
+									root.grid_rowconfigure(1, weight=2)  # Espace pour le milieu (champs de texte)
+									root.grid_rowconfigure(2, weight=1)  # Espace pour le bas (boutons)
+									root.grid_columnconfigure(0, weight=1)  # Centrer les éléments horizontalement
+								
+									# Texte "Inscription" tout en haut
+									tk.Label(root, text="Inscription", font=("Arial", 24)).grid(row=0, column=0, pady=10, sticky="n")
+								
+									# Zone pour les champs de texte (au milieu)
+									frame_champs = tk.Frame(root)
+									frame_champs.grid(row=1, column=0, pady=20)
+								
+									nom_entry = creer_champ_texte("Nom", parent=frame_champs)
+									prenom_entry = creer_champ_texte("Prénom", parent=frame_champs)
+									email_entry = creer_champ_texte("Email", parent=frame_champs)
+									mdp_entry = creer_champ_texte("Mot de passe", parent=frame_champs, show="*")
+								
+									# Boutons en bas
+									frame_boutons = tk.Frame(root)
+									frame_boutons.grid(row=2, column=0, pady=20)
+								
+									def valider_inscription():
+										nom = nom_entry.get()
+										prenom = prenom_entry.get()
+										email = email_entry.get()
+										mdp = mdp_entry.get()
+								
+										if not all([nom, prenom, email, mdp]):
+											messagebox.showerror("❌ Erreur", "Tous les champs doivent être remplis.")
+											return
+								
+										compte_cree = fonctions_com.new_com(nom, prenom, email, mdp)
+								
+										if compte_cree:
+											messagebox.showinfo("Inscription réussie", "Votre compte a été créé avec succès.")
+											afficher_accueil()
+										else:
+											pass
+								
+									# Ajouter les boutons dans le frame des boutons
+									tk.Button(frame_boutons, text="S'inscrire", fg="#ffffff", bg="#5cb85c", font=("Arial", 14), command=valider_inscription).pack(side="left", padx=10)
+									tk.Button(frame_boutons, text="Retour", fg="#ffffff", bg="#d9534f", font=("Arial", 14), command=afficher_accueil).pack(side="left", padx=10)
+								
+								# Fonction pour afficher le menu principal après connexion
+								def afficher_menu_principal(user):
+									clear_window()
+								
+									# Centrer le texte du label
+									frame_menu = tk.Frame(root)
+									frame_menu.pack(pady=10, expand=True, fill='both')
+									tk.Label(frame_menu, text=f"Bienvenue {user['prenom']} {user['nom']} !", font=("Arial", 24)).pack(expand=True, fill='both')
+									
+									# Conteneur de boutons pour les aligner sur une ligne
+									frame_boutons = tk.Frame(root)
+									frame_boutons.pack(pady=10)
+								
+									# Boutons du menu principal
+									tk.Button(frame_boutons, text="Gestion de produits", fg="#ffffff", bg="#6495ed", font=("Arial", 14), command=lambda: messagebox.showinfo("Info", "Fonctionnalité à implémenter")).pack(side="left", padx=10)
+									tk.Button(frame_boutons, text="Gérer mon compte", fg="#ffffff", bg="#9683ec", font=("Arial", 14), command=lambda: messagebox.showinfo("Info", "Fonctionnalité à implémenter")).pack(side="left", padx=10)
+									tk.Button(frame_boutons, text="Déconnexion", font=("Arial", 14), command=afficher_accueil).pack(side="left", padx=10)
+								
+								# Fonction pour afficher l'écran d'accueil
+								def afficher_accueil():
+									clear_window()
+								
+									# Centrer le texte du label
+									frame_accueil = tk.Frame(root)
+									frame_accueil.pack(pady=10, expand=True, fill='both')
+									tk.Label(frame_accueil, text="Bienvenue sur votre logiciel de gestion des commerçants", font=("Arial", 24)).pack(expand=True, fill='both')
+								
+									# Conteneur de boutons pour les aligner sur une ligne
+									frame_boutons = tk.Frame(root)
+									frame_boutons.pack(pady=10)
+								
+									# Boutons d'accueil
+									tk.Button(frame_boutons, text="Connexion", font=("Arial", 14), fg="#ffffff", bg="#5cb85c", command=afficher_connexion).pack(side="left", padx=10)
+									tk.Button(frame_boutons, text="Inscription", font=("Arial", 14), fg="#ffffff", bg="#6495ed", command=afficher_inscription).pack(side="left", padx=10)
+									tk.Button(frame_boutons, text="Quitter", fg="#ffffff", bg="#d9534f", font=("Arial", 14), command=quitter_application).pack(side="left", padx=10)
+								
+								# Fonction pour quitter l'application
+								def quitter_application():
+									root.destroy()
+								
+								# Fonction pour vider la fenêtre avant de l'actualiser
+								def clear_window():
+									for widget in root.winfo_children():
+										widget.destroy()
+								
+								# Fonction pour créer un champ de texte avec une étiquette
+								def creer_champ_texte(label_text, parent=None, show=None):
+									if parent is None:
+										parent = root
+									frame = tk.Frame(parent)
+									frame.pack(pady=10)
+									tk.Label(frame, text=label_text, font=("Arial", 14)).pack(side="top", anchor="w")
+									champ = tk.Entry(frame, font=("Arial", 14), show=show, width=30)
+									champ.pack(side="top", fill="x", padx=5)
+									return champ
+								
+								# Fenêtre principale
+								root = tk.Tk()
+								root.title("Interface de gestion")
+								
+								window_width = 1200
+								window_height = 800
+								
+								screen_width = root.winfo_screenwidth()
+								screen_height = root.winfo_screenheight()
+								
+								position_top = int((screen_height - window_height) / 2)
+								position_left = int((screen_width - window_width) / 2)
+								
+								root.geometry(f"{window_width}x{window_height}+{position_left}+{position_top}")
+								
+								afficher_accueil()
+								root.mainloop()
+								</p>
+							<br><br>
+
+							<h2>Fonction pour log users</h2>
+							<p>import csv
+								import os
+								import hashlib
+								from datetime import datetime
+								
+								FILENAME = 'user_logs.csv'
+								HEADER = ['timestamp', 'user_id', 'mot de passe hashé', 'connexion', 'mot de passe compromis']
+								fichier_users = "data/users.csv"
+								fichier_logs = "data/logs_users.csv"
+								
+								# Fonction pour hasher le mot de passe avec un sel
+								def hash_mdp(mot_de_passe, sel):
+									mdp_sel = mot_de_passe + sel
+									mdp_bytes = mdp_sel.encode('utf-8')
+									hashed_mdp = hashlib.sha256(mdp_bytes).hexdigest()
+									return hashed_mdp
+								
+								# Initialiser le fichier CSV avec les en-têtes
+								def initialize_csv():
+									if not os.path.exists(fichier_logs):
+										try:
+											with open(fichier_logs, mode='w', newline='', encoding='utf-8') as file:
+												writer = csv.writer(file)
+												writer.writerow(HEADER)
+										except Exception as e:
+											print(f"Erreur lors de la création du fichier de logs : {e}")
+								
+								# Log de l'action de l'utilisateur
+								def log_user_action(id_utilisateur, mot_de_passe, connexion_reussie, mdp_compromis):
+									initialize_csv()
+									try:
+										date_action = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+										mot_de_passe_hashé = hash_mdp(mot_de_passe, '')
+								
+										with open(fichier_logs, 'a', newline='', encoding='utf-8') as fichier_log:
+											writer = csv.writer(fichier_log)
+											writer.writerow([date_action, id_utilisateur, mot_de_passe_hashé, connexion_reussie, mdp_compromis])
+									except Exception as e:
+										print(f"Erreur lors de l'enregistrement du log : {e}")
+							</p>
+
+							<h2>Fonctions pour les produits</h2>
+							<p>import pandas as pd
+								import tkinter as tk
+								from tkinter import messagebox
+								
+								# Fonction pour charger les produits d'un utilisateur
+								def charger_produits(id):
+									return "data/produits_commercants/produits-" + str(id) + ".csv"
+								
+								# Lire les produits
+								def lire_produits(id):
+									fichier = charger_produits(id)
+									try:
+										produits_df = pd.read_csv(fichier)
+										if produits_df.empty:
+											print("😶‍🌫️  Le fichier est vide.")
+										else:
+											for index, row in produits_df.iterrows():
+												print(f"{index}. {row['Nom']}, {row['Prix']}€, {row['Stock']} en stock")
+									except FileNotFoundError:
+										print("\n--> ⚠️  Le fichier n'a pas été trouvé.")
+								
+								# Fonction pour trier par nom
+								def trier_nom(id):
+									fichier = charger_produits(id)
+									try:
+										produits_df = pd.read_csv(fichier)
+										if produits_df.empty:
+											return None, "😶‍🌫️ Le fichier est vide."
+								
+										# Tri insensible à la casse
+										produits_df = produits_df.sort_values(by='Nom', key=lambda col: col.str.lower(), ascending=True)
+										produits_df.to_csv(fichier, index=False)
+										return produits_df, "✅ Produits triés par nom."
+									except FileNotFoundError:
+										return None, "⚠️ Le fichier des produits est introuvable."
+									except Exception as e:
+										return None, f"❌ Une erreur est survenue : {e}"
+								
+								# Fonction pour trier par prix
+								def trier_prix(id):
+									fichier = charger_produits(id)
+									try:
+										produits_df = pd.read_csv(fichier)
+										if produits_df.empty:
+											return None, "😶‍🌫️ Le fichier est vide."
+										
+										produits_df['Prix'] = produits_df['Prix'].apply(
+											lambda x: float(str(x).replace('€', '').strip()) if isinstance(x, str) else x
+										)
+										produits_df = produits_df.sort_values(by='Prix', ascending=True)
+										produits_df.to_csv(fichier, index=False)
+										return produits_df, "✅ Produits triés par prix."
+									except FileNotFoundError:
+										return None, "⚠️ Le fichier n'a pas été trouvé."
+									except Exception as e:
+										return None, f"⚠️ Une erreur est survenue : {e}"
+								
+								# Fonction pour trier par stock
+								def trier_stock(id):
+									fichier = charger_produits(id)
+									try:
+										produits_df = pd.read_csv(fichier)
+										if produits_df.empty:
+											return None, "😶‍🌫️ Le fichier est vide."
+										
+										produits_df = produits_df.sort_values(by='Stock', ascending=True)
+										produits_df.to_csv(fichier, index=False)
+										return produits_df, "✅ Produits triés par stock."
+									except FileNotFoundError:
+										return None, "⚠️ Le fichier n'a pas été trouvé."
+									except Exception as e:
+										return None, f"⚠️ Une erreur est survenue : {e}"</p>
+							
+							<h2>Les fonctions pour commerçants</h2>
+							<p>import os
+								import csv
+								import pandas as pd
+								import hashlib
+								import requests
+								import re
+								import logs_users
+								import secrets
+								import envoie_mail
+								import tkinter as tk
+								from tkinter import messagebox
+								fichier_users = "data/users.csv"
+								
+								# Fonction de validation des adresses e-mail
+								def verifier_adresse_email(email):
+									pattern = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$'
+									return re.match(pattern, email) is not None
+								
+								# Vérification du mot de passe avec l'API HAve I Been Pwned
+								def check_password_pwned(password):
+									sha1_password = hashlib.sha1(password.encode('utf-8')).hexdigest().upper()
+									prefix = sha1_password[:5]
+									suffix = sha1_password[5:]
+									url = f"https://api.pwnedpasswords.com/range/{prefix}"
+									response = requests.get(url)
+									if response.status_code != 200:
+										raise RuntimeError(f"Erreur API: {response.status_code}")
+									hashes = (line.split(':') for line in response.text.splitlines())
+									for h, count in hashes:
+										if h == suffix:
+											return int(count)
+									return 0
+								
+								# Comparaison de mots de passe avec le fichier rockyou.csv
+								def compare(mdp_hash):
+									try:
+										with open('ressources/rockyou.csv', 'r') as fichier:
+											for ligne in fichier:
+												if ligne.strip() == mdp_hash:
+													return True
+										return False
+									except FileNotFoundError:
+										print("\n❌ Le fichier rockyou.csv est introuvable.")
+										return False
+								
+								# Créer un sel (valeur aléatoire)
+								def sel():
+									token = secrets.token_hex(16)
+									return token
+								
+								# Fonction pour le message du mail
+								
+								def message_mail(fichier_users, id_user):
+									try:
+										with open(fichier_users, 'r', encoding='utf-8') as fichier:
+											tab = list(csv.reader(fichier))
+								
+										for ligne in tab:
+											if ligne[0] == id_user:
+												nom = ligne[1].strip()
+												prenom = ligne[2].strip()
+								
+												# Message du mail
+												message = (
+													f"Bonjour {prenom} {nom},\n\n"
+													"Votre mot de passe a été détecté comme compromis. "
+													"Nous vous recommandons de le changer immédiatement.\n\n"
+													"Cordialement,\nL'équipe de sécurité."
+												)
+												return message
+										return f"Utilisateur avec l'ID {id_user} introuvable."
+								
+									except FileNotFoundError:
+										return "Erreur : le fichier spécifié est introuvable."
+									except Exception as e:
+										return f"Erreur inattendue : {e}"
+								
+								# Inscription
+								
+								# Création du fichier users.csv
+								def creer_fichier_users():
+									if not os.path.exists(fichier_users):
+										try:
+											with open(fichier_users, 'x') as fichier:
+												print("\n✅  Le fichier a été créé avec succès !")
+										except Exception as e:
+											print("\n--> ⚠️  Erreur inattendue :", e)
+									else:
+										file_size = os.stat(fichier_users).st_size
+										if file_size != 0:
+											print("\n👌  Le fichier est déjà créé et contient des données.")
+										else:
+											print("\n👌  Le fichier est déjà créé mais est vide.")
+								
+								# Création du fichier produits.csv
+								def creer_fichier_produit_com(id):
+									fichier_produits = "data/produits_commercants/produits-" + str(id) + ".csv"
+									if not os.path.exists(fichier_produits):
+										try:
+											produits_df = pd.DataFrame(columns=["Nom", "Prix", "Stock"])
+											produits_df.to_csv(fichier_produits, index=False)
+											print("\n✅  Le fichier a été créé avec succès avec l'en-tête !")
+										except Exception as e:
+											print("\n--> ⚠️ Erreur inattendue :", e)
+									else:
+										file_size = os.stat(fichier_produits).st_size
+										if file_size != 0:
+											print("\n👌  Le fichier est déjà créé et contient des données.")
+										else:
+											print("\n👌  Le fichier est déjà créé mais est vide.")
+											produits_df = pd.DataFrame(columns=["Nom", "Prix", "Stock"])
+											produits_df.to_csv(fichier_produits, index=False)
+											print("\n✅  L'en-tête a été ajouté au fichier vide.")
+									return fichier_produits
+								
+								# Ajouter un utilisateur
+								def new_com(nom, prenom, mail, mdp):
+									creer_fichier_users()
+									try:
+										with open(fichier_users, 'r', newline='', encoding='utf-8') as fichier:
+											total_lignes = 0
+											lecteur = csv.reader(fichier)
+											emails_existants = []
+											for ligne in lecteur:
+												total_lignes += 1
+												if len(ligne) > 3:
+													emails_existants.append(ligne[3])
+									except FileNotFoundError:
+										messagebox.showerror("Fichier inexistant", "⚠️ Le fichier n'a pas été trouvé.")
+										return False
+									try:
+										with open(fichier_users, 'a', newline='', encoding='utf-8') as fichier:
+								
+											if not verifier_adresse_email(mail):
+												messagebox.showerror("Email invalide","❌ Le mail est invalide. Veuillez entrer un format correct.")
+												return False
+											if mail in emails_existants:
+												messagebox.showerror("Email déjà existant", "⚠️ Adresse mail déjà utilisée, veuillez réessayer.")
+												return False
+								
+											try:
+												compromis = check_password_pwned(mdp)
+												if compromis > 0:
+													messagebox.showwarning("Mot de passe compromis et invalide", f"🚨  Mot de passe compromis. Il a été trouvé {compromis} fois dans des fuites de données.\nVeuillez en choisir un autre.")
+													return False
+											except RuntimeError as e:
+												messagebox.showerror("Erreur", f"Erreur lors de la vérification du mot de passe : {e}")
+												return False
+								
+											sel_ = sel()
+											mdp_sel = mdp + sel_
+											mdp_bytes = mdp_sel.encode('utf-8')
+											hashed_mdp = hashlib.sha256(mdp_bytes).hexdigest()
+											ecrivain = csv.writer(fichier)
+											tab = [[total_lignes, nom, prenom, mail, hashed_mdp, sel_]]
+											ecrivain.writerows(tab)
+											creer_fichier_produit_com(total_lignes)
+									except FileNotFoundError:
+										messagebox.showerror("Fichier inexistant", "⚠️ Le fichier n'a pas été trouvé.")
+										return False
+									return True
+								
+								# Connexion
+								def connect(email, mdp):
+									try:
+										with open(fichier_users, 'r', newline='', encoding='utf-8') as fichier:
+											tab = list(csv.reader(fichier))
+										if not tab:
+											messagebox.showerror("⚠️ Erreur", "Aucun utilisateur n'est enregistré.")
+											return
+										utilisateur = None
+										for ligne in tab:
+											if email == ' ':
+												messagebox.showerror("❗ Erreur", "Votre mail ne peut pas être vide.")
+												return
+											elif email == ligne[3]:
+												utilisateur = ligne
+										if utilisateur is None:
+											messagebox.showerror("❌ Erreur", "L'email que vous avez renseigné n'existe pas. Veuillez réessayer.")
+											logs_users.log_user_action("", "", False, False)
+											return
+										mdp_sel = mdp + utilisateur[5]
+										mdp_bytes = mdp_sel.encode('utf-8')
+										hashed_mdp = hashlib.sha256(mdp_bytes).hexdigest()
+										compromis = check_password_pwned(mdp)
+								
+										id = utilisateur[0]
+										nom = utilisateur[1]
+										prenom = utilisateur[2]
+										email = utilisateur[3]
+								
+										if hashed_mdp == utilisateur[4]:
+											if compromis > 0:
+												messagebox.showwarning("Mot de passe compromis", "🚨  Attention, votre mot de passe est compromis. Pensez à le changer !")
+												envoie_mail.envoyer_mail(email, '🚨 Alerte de sécurité : Mot de passe compromis', message_mail(fichier_users, id))
+								
+											messagebox.showinfo("Welcome Back !", f"✅  Bienvenue, {nom} {prenom} !")
+											logs_users.log_user_action(id, hashed_mdp, True, compromis > 0)
+										else:
+											messagebox.showerror("❌ Erreur",  "Mot de passe incorrect. Veuillez réessayer.")
+											logs_users.log_user_action("", hashed_mdp, False, compromis > 0)
+											return
+									except FileNotFoundError:
+										print("\n--> ⚠️  Le fichier n'a pas été trouvé.")
+										logs_users.log_user_action("", "", False, False)
+										return
+									return id, nom, prenom, email</p>
+								
+							<h2>Envoi email</h2>
+							<p>import smtplib
+								from email.mime.text import MIMEText
+								
+								# Configuration de l'email
+								SMTP_SERVER = 'smtp.gmail.com'
+								SMTP_PORT = 587
+								SENDER_EMAIL = '77e.riviere@gmail.com'
+								SENDER_PASSWORD = 'kvbx goop lnmb fivt'
+								
+								# Fonction pour envoyer un email
+								def envoyer_mail(destinataire, sujet, message):
+									msg = MIMEText(message)
+									msg['Subject'] = sujet
+									msg['From'] = SENDER_EMAIL
+									msg['To'] = destinataire
+								
+									try:
+										with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+											server.starttls()  # Chiffrement de la connexion
+											server.login(SENDER_EMAIL, SENDER_PASSWORD)
+											server.sendmail(SENDER_EMAIL, destinataire, msg.as_string())
+										print(f"✅  Email envoyé avec succès à {destinataire}")
+									except Exception as e:
+										print(f"Erreur lors de l'envoi de l'email : {e}")</p>
+						</div>
+					</section>
+				</section>	
+			</div>
+
+		<!-- Footer -->
+			<footer id="footer" class="wrapper alt">
+				<div class="inner">
+					<ul class="menu">
+						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+						<li><a href="Intro programmatation.zip" class="button">intro programmation</a></li>
+						<li><a href="Dev web full stack.zip" class="button">dev web full stack</a></li>
+						<li><a href="Algo S1.html" class="button">Algo Semaine 1</a></li>
+						<li><a href="Algo S2.html" class="button">Algo Semaine 2</a></li>
+						<li><a href="Algo S3.html" class="button">Algo Semaine 3</a></li>
+						<li><a href="Algo TD.html" class="button">Algo TD</a></li>
+						<li><a href="Algo pandas.pdf" target="_blank" class="button">Algo Pandas</a></li>
+						<li><a href="Algo fichier.pdf" target="_blank" class="button">Algo fichier</a></li>
+					</ul>
+				</div>
+			</footer>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

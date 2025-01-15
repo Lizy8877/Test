@@ -1,0 +1,656 @@
+<!DOCTYPE HTML>
+<!--
+	Hyperspace by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Algo 2</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Header -->
+			<header id="header">
+				<a href="index.html" class="title">Portfolio Cyber</a>
+				<nav>
+					<ul>
+						<li><a href="Accueil.html">Accueil</a></li>
+						<li><a href="a-propos.html">À propos</a></li>
+						<li><a href="mois-cyber.html" >Le mois de la cyber</a></li>
+						<li><a href="Contact.html" >Contact</a></li>
+					</ul>
+				</nav>
+			</header>
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<section id="main" class="wrapper">
+						<div class="inner">
+							<h1 class="major">Algo 2</h1>
+							<h2>Main</h2>
+							<p>import fonctions_com as fonctions_com
+								import time
+								
+								def interaction():
+									print("🖖  Bienvenue sur votre logiciel de gestions des commerçants.\n")
+									time.sleep(0.5)
+									while True:
+										try:
+											choice = int(input("💭  Que souhaitez-vous faire ?\n1. Connexion\n2. Inscription\n3. Quitter\nVotre choix : "))
+											if choice == 1:
+												fonctions_com.connect()
+												time.sleep(0.5)
+												print("\n")
+											elif choice == 2:
+												while True:
+													print("\n=== Menu d'Inscription ===")
+													choice2 = int(input("💭  Que souhaitez-vous faire ?\n1. S'inscrire\n2. Tester un mot de passe.\n3. Quitter\nVotre choix : "))
+													if choice2 == 1:
+														fonctions_com.new_com()
+														print("\n".strip())
+														time.sleep(0.5)
+														break
+													elif choice2 == 2:
+														mdp_test = input("\nTestez un mot de passe.\nMot de passe : ")
+														compromis = fonctions_com.check_password_pwned(mdp_test)
+														if compromis > 0:
+															print(f"\n--> 🚨  Mot de passe compromis. Il a été trouvé {compromis} fois dans des fuites de données.")
+														else:
+															print("\n✅  Ce mot de passe n'est pas compris !")
+													elif choice2 == 3:
+														print("\n⏪  Retour à la gestion des commerçants.")
+														time.sleep(0.5)
+														break
+													else:
+														print("\n--> ⚠️  Je ne comprends pas ce que vous souhaitez.\n")
+											elif choice == 3:
+												print("\n✅  Merci d'avoir utilisé le gestionnaire de commerçants !\n©️ Baptiste AUSSANT & Elisabeth RIVIERE - 2024\n")
+												break
+											else:
+												print("\n--> ⚠️  Je ne comprends pas ce que vous souhaitez.\n")
+										except ValueError:
+											print("\n--> ⚠️  Veuillez renseigner un entier.\n")
+								
+								interaction()</p>
+							<br><br>
+
+							<h2>Main Gestion de produits</h2>
+							<p>import fonctions_produits as fonctions_produits
+								import fonctions_com as fonctions_com
+								import time
+								
+								def interaction(id, nom, prenom, mail):
+									print("🖖  Bienvenue sur votre logiciel de gestions de produits.")
+									time.sleep(0.5)
+									while True:
+										try:
+											choice = int(input("\n💭  Que souhaitez-vous faire ?\n1. Ajouter des produits.\n2. Voir les produits.\n3. Supprimer un produit.\n4. Recherche un produit.\n5. Trier les produits\n6. Quitter.\nVotre choix : "))
+											if choice == 1:
+												fonctions_produits.ajouter_produit(id)
+												time.sleep(0.5)
+												print("\n")
+											elif choice == 2:
+												print("\n".strip())
+												fonctions_produits.lire_produits(id)
+												print("\n".strip())
+												time.sleep(0.5)
+											elif choice == 3:
+												fonctions_produits.suppr_produits(id)
+												print("\n".strip())
+												time.sleep(0.5)
+											elif choice == 4:
+												fonctions_produits.recherche(id)
+												time.sleep(0.5)
+											elif choice == 5:
+												fonctions_produits.trier(id)
+												time.sleep(0.5)
+											elif choice == 6:
+												print("\n✅  Merci d'avoir utilisé le gestionnaire de produits !\n©️ Baptiste AUSSANT & Elisabeth RIVIERE - 2024\n⏪  Retour.")
+												time.sleep(0.5)
+												break
+											else:
+												print("\n--> ⚠️  Je ne comprends pas ce que vous souhaitez.\n")
+										except ValueError:
+											print("\n--> ⚠️ PRODUITS :  Veuillez renseigner un entier.\n")
+							</p>
+
+							<h2>Fonctions pour les produits</h2>
+							<p>import pandas as pd
+
+								# Fonction pour charger les produits d'un utilisateur
+								def charger_produits(id):
+									return "data/produits_commercants/produits-" + str(id) + ".csv"
+								
+								# Ajouter un produit
+								def ajouter_produit(id):
+									fichier = charger_produits(id)
+									
+									while True:
+										try:
+											nom = input("\nQuel est le nom du produit ?\n")
+											prix_valide = False
+											while not prix_valide:
+												try:
+													prix = float(input("Quel est son prix ?\n"))
+													prix_valide = True
+												except ValueError:
+													print("\n--> ⚠️  Renseignez un prix valide (nombre).")
+											stock_valide = False
+											while not stock_valide:
+												try:
+													stock = int(input("Combien en reste-t-il ?\n"))
+													stock_valide = True
+												except ValueError:
+													print("\n--> ⚠️  Renseignez un stock valide (entier).")
+											nouveau_produit = pd.DataFrame([[nom, prix, stock]], columns=["Nom", "Prix", "Stock"])
+											try:
+												produits_df = pd.read_csv(fichier)
+												produits_df = pd.concat([produits_df, nouveau_produit], ignore_index=True)
+											except FileNotFoundError:
+												produits_df = nouveau_produit
+											produits_df.to_csv(fichier, index=False)
+											print("\n✅  Produit ajouté avec succès !")
+										except Exception as e:
+											print(f"\n--> ⚠️  Une erreur est survenue : {e}")
+											continue
+										resp_reboot = input("\nSouhaitez-vous ajouter un autre produit ? (o/oui)\n- Réponse : ")
+										if resp_reboot.lower() not in ["o", "oui"]:
+											print("\n✅  Tous vos produits ont été ajoutés !")
+											break
+								
+								# Lire les produits
+								def lire_produits(id):
+									fichier = charger_produits(id)
+									try:
+										produits_df = pd.read_csv(fichier)
+										if produits_df.empty:
+											print("😶‍🌫️  Le fichier est vide.")
+										else:
+											for index, row in produits_df.iterrows():
+												print(f"{index}. {row['Nom']}, {row['Prix']}€, {row['Stock']} en stock")
+									except FileNotFoundError:
+										print("\n--> ⚠️  Le fichier n'a pas été trouvé.")
+								
+								# Supprimer un produit
+								def suppr_produits(id):
+									fichier = charger_produits(id)
+									try:
+										produits_df = pd.read_csv(fichier)
+										if produits_df.empty:
+											print("😶‍🌫️  Le fichier est vide.")
+											return
+										lire_produits(id)
+										choix_suppr = input("\n 🚮  Numéro du produit que vous souhaitez supprimer (all = tout) : ")
+										if choix_suppr == "all":
+											produits_df = produits_df.iloc[0:0]
+											print("\n✅  Tous les produits ont été supprimés.")
+										else:
+											try:
+												choix_suppr = int(choix_suppr)
+												if choix_suppr < 0 or choix_suppr >= len(produits_df):
+													print("\n--> ⚠️  Renseignez un numéro de produit valide.")
+													return
+												produits_df = produits_df.drop(choix_suppr)
+												print(f"\n✅  Le produit numéro {choix_suppr} a été supprimé.")
+											except ValueError:
+												print("\n--> ⚠️  Renseignez un numéro valide ou 'all'.")
+												return
+										produits_df.to_csv(fichier, index=False)
+									except FileNotFoundError:
+										print("\n--> ⚠️  Le fichier n'a pas été trouvé.")
+								
+								
+								# Rechercher un produit
+								def recherche(id):
+									fichier = charger_produits(id)
+									try:
+										produits_df = pd.read_csv(fichier)
+										if produits_df.empty:
+											print("\n😶‍🌫️  Le fichier est vide.")
+											return
+										valeur_a_rechercher = input("\n🔎  Quel produit cherchez-vous ?\nNom du produit : ").strip().lower()
+										produit_trouve = produits_df[produits_df['Nom'].str.lower() == valeur_a_rechercher]
+										if not produit_trouve.empty:
+											print(f"\n✅  Produit trouvé :\n{produit_trouve}")
+										else:
+											print("\n❌  Aucun produit trouvé avec ce nom.")
+									except FileNotFoundError:
+										print("\n--> ⚠️  Le fichier n'a pas été trouvé.")
+									except Exception as e:
+										print(f"\n--> ⚠️  Une erreur est survenue : {e}")
+								
+								# Fonction pour trier par nom
+								def trier_nom(id):
+									fichier = charger_produits(id)
+									try:
+										produits_df = pd.read_csv(fichier)
+										if produits_df.empty:
+											print("😶‍🌫️  Le fichier est vide.")
+											return
+										produits_df = produits_df.sort_values(by='Nom', ascending=True)
+										produits_df.to_csv(fichier, index=False)
+										print("\n✅  Produits triés par nom :")
+										lire_produits(id)
+									except FileNotFoundError:
+										print("\n--> ⚠️  Le fichier n'a pas été trouvé.")
+								
+								# Fonction pour trier par prix
+								def trier_prix(id):
+									fichier = charger_produits(id)
+									try:
+										produits_df = pd.read_csv(fichier)
+										if produits_df.empty:
+											print("😶‍🌫️  Le fichier est vide.")
+											return
+										produits_df['Prix'] = produits_df['Prix'].apply(lambda x: float(str(x).replace('€', '').strip()))
+										produits_df = produits_df.sort_values(by='Prix', ascending=True)
+										produits_df.to_csv(fichier, index=False)
+										print("\n✅  Produits triés par prix :")
+										lire_produits(id)
+									except FileNotFoundError:
+										print("\n--> ⚠️  Le fichier n'a pas été trouvé.")
+									except Exception as e:
+										print(f"\n--> ⚠️  Une erreur est survenue : {e}")
+								
+								
+								
+								# Fonction pour trier par stock
+								def trier_stock(id):
+									fichier = charger_produits(id)
+									try:
+										produits_df = pd.read_csv(fichier)
+										if produits_df.empty:
+											print("😶‍🌫️  Le fichier est vide.")
+											return
+										produits_df = produits_df.sort_values(by='Stock', ascending=True)
+										produits_df.to_csv(fichier, index=False)
+										print("\n✅  Produits triés par stock :")
+										lire_produits(id)
+									except FileNotFoundError:
+										print("\n--> ⚠️  Le fichier n'a pas été trouvé.")
+								
+								# Fonction principale pour sélectionner un tri
+								def trier(id):
+									try:
+										print("\n=== Menu Tri ===")
+										choix = int(input("❔  Comment souhaitez-vous trier vos produits ?\n1. Trier par nom\n2. Trier par prix\n3. Trier par stock\nVotre choix : "))
+										if choix == 1:
+											trier_nom(id)
+										elif choix == 2:
+											trier_prix(id)
+										elif choix == 3:
+											trier_stock(id)
+										else:
+											print("\n--> ⚠️  Renseignez un choix valide.")
+									except ValueError:
+										print("\n--> ⚠️  Renseignez un entier valide.")
+							</p>
+
+							<h2>Fonctions pour les commerçants</h2>
+							<p>import os
+								import csv
+								import time
+								import pandas as pd
+								import gestion_des_produits as gestion_produits
+								import hashlib
+								import csv
+								import requests
+								import random
+								import string
+								fichier_users = "data/users.csv"
+								
+								# Vérification du mot de passe avec l'API HAve I Been Pwned
+								def check_password_pwned(password):
+									sha1_password = hashlib.sha1(password.encode('utf-8')).hexdigest().upper()
+									prefix = sha1_password[:5]
+									suffix = sha1_password[5:]
+									url = f"https://api.pwnedpasswords.com/range/{prefix}"
+									response = requests.get(url)
+									if response.status_code != 200:
+										raise RuntimeError(f"Erreur API: {response.status_code}")
+									hashes = (line.split(':') for line in response.text.splitlines())
+									for h, count in hashes:
+										if h == suffix:
+											return int(count)
+									return 0
+								
+								# Comparaison de mots de passe avec le fichier rockyou.csv
+								def compare(mdp_hash):
+									try:
+										with open('ressources/rockyou.csv', 'r') as fichier:
+											for ligne in fichier:
+												if ligne.strip() == mdp_hash:
+													return True
+										return False
+									except FileNotFoundError:
+										print("\n❌ Le fichier rockyou.csv est introuvable.")
+										return False
+								
+								# Créer un sel (valeur aléatoire)
+								def sel():
+									caracteres = string.ascii_letters + string.digits + string.punctuation
+									chaine = ''.join(random.choices(caracteres, k=50))
+									return chaine
+								
+								# Inscription
+								
+								# Création du fichier users.csv
+								def creer_fichier_users():
+									if not os.path.exists(fichier_users):
+										try:
+											with open(fichier_users, 'x') as fichier:
+												print("\n✅  Le fichier a été créé avec succès !")
+										except Exception as e:
+											print("\n--> ⚠️  Erreur inattendue :", e)
+									else:
+										file_size = os.stat(fichier_users).st_size
+										if file_size != 0:
+											print("\n👌  Le fichier est déjà créé et contient des données.")
+										else:
+											print("\n👌  Le fichier est déjà créé mais est vide.")
+								
+								# Création du fichier produits.csv
+								def creer_fichier_produit_com(id):
+									fichier_produits = "data/produits_commercants/produits-" + str(id) + ".csv"
+									if not os.path.exists(fichier_produits):
+										try:
+											produits_df = pd.DataFrame(columns=["Nom", "Prix", "Stock"])
+											produits_df.to_csv(fichier_produits, index=False)
+											print("\n✅  Le fichier a été créé avec succès avec l'en-tête !")
+										except Exception as e:
+											print("\n--> ⚠️ Erreur inattendue :", e)
+									else:
+										file_size = os.stat(fichier_produits).st_size
+										if file_size != 0:
+											print("\n👌  Le fichier est déjà créé et contient des données.")
+										else:
+											print("\n👌  Le fichier est déjà créé mais est vide.")
+											produits_df = pd.DataFrame(columns=["Nom", "Prix", "Stock"])
+											produits_df.to_csv(fichier_produits, index=False)
+											print("\n✅  L'en-tête a été ajouté au fichier vide.")
+									return fichier_produits
+								
+								# Ajouter un utilisateur
+								def new_com():
+									creer_fichier_users()
+									try:
+										with open(fichier_users, 'r', newline='', encoding='utf-8') as fichier:
+											total_lignes = 0
+											lecteur = csv.reader(fichier)
+											emails_existants = []
+											for ligne in lecteur:
+												total_lignes += 1
+												if len(ligne) > 3:
+													emails_existants.append(ligne[3])
+									except FileNotFoundError:
+										print("\n--> ⚠️  Le fichier n'a pas été trouvé.")
+									try:
+										with open(fichier_users, 'a', newline='', encoding='utf-8') as fichier:
+											while True:
+												nom = input("\nSaisissez votre nom.\nNom : ")
+												if nom == '' or not all(ord(c) < 128 for c in nom):
+													print("❌ Le nom ne peut pas être vide et ne doit pas contenir de caractères invalides.")
+													continue
+												break
+											while True:
+												prenom = input("\nSaisissez votre prénom.\nPrénom : ")
+												if prenom == '' or not all(ord(c) < 128 for c in prenom):
+													print("❌ Le prénom ne peut pas être vide et ne doit pas contenir de caractères invalides.")
+													continue
+												break
+											while True:
+												mail = input("\nSaisissez votre mail.\nMail : ")
+												if mail == '' or not all(ord(c) < 128 for c in mail):
+													print("❌ Le mail ne peut pas être vide et ne doit pas contenir de caractères invalides.")
+													continue
+												if mail in emails_existants:
+													print("\n--> ⚠️  Adresse mail déjà utilisée, veuillez réessayer.")
+													continue
+												break
+											while True:
+												mdp = input("\nSaisissez votre mot de passe.\nMot de passe : ")
+												try:
+													compromis = check_password_pwned(mdp)
+													if compromis > 0:
+														print(f"\n--> 🚨  Mot de passe compromis. Il a été trouvé {compromis} fois dans des fuites de données.\nVeuillez en choisir un autre.")
+														continue
+												except RuntimeError as e:
+													print(f"Erreur lors de la vérification du mot de passe : {e}")
+													continue
+												if mdp == '':
+													continue
+												break
+											sel_ = sel()
+											mdp_sel = mdp + sel_
+											mdp_bytes = mdp_sel.encode('utf-8')
+											hashed_mdp = hashlib.sha256(mdp_bytes).hexdigest()
+											ecrivain = csv.writer(fichier)
+											tab = [[total_lignes, nom, prenom, mail, hashed_mdp, sel_]]
+											ecrivain.writerows(tab)
+											creer_fichier_produit_com(total_lignes)
+									except FileNotFoundError:
+										print("\n--> ⚠️  Le fichier n'a pas été trouvé.")
+								
+								# Supprimer un compte
+								def del_com(id):
+									verif = input("\nSouhaitez-vous vraiment supprimer votre compte ? (o/oui)\n🚨  Cette étape est irréversible.\nVotre choix : ")
+									if verif.lower() in ['o', 'oui']:
+										try:
+											try:
+												id = int(id)
+											except ValueError:
+												print(f"❌ L'id {id} n'est pas un entier valide.")
+												return
+											with open(fichier_users, 'r') as fichier:
+												tab = []
+												lecteur = csv.reader(fichier)
+												for ligne in lecteur:
+													tab.append(ligne)
+											if 0 <= id < len(tab):
+												tab[id] = [' ', ' ', ' ', ' ', ' ', ' ']
+											else:
+												print(f"❌ L'id {id} est hors de portée.")
+												return
+											with open(fichier_users, 'w', newline='') as fichier:
+												ecrivain = csv.writer(fichier)
+												for i in range(len(tab)):
+													datas = [[str(i), str(tab[i][1]), str(tab[i][2]), str(tab[i][3]), str(tab[i][4]), str(tab[i][5])]]
+													ecrivain.writerows(datas)
+											print("\n✅  Votre compte a bien été supprimé.")
+											os.remove("data/produits_commercants/produits-" + str(id) + ".csv")
+											os._exit(0)
+										except FileNotFoundError:
+											print("\n--> ⚠️  Le fichier n'a pas été trouvé.")
+									else:
+										return None
+								
+								# Modifier un utilisateur
+								def edit_com(id):
+									try:
+										id = int(id)
+										with open(fichier_users, 'r', newline='', encoding='utf-8') as fichier:
+											tab = list(csv.reader(fichier))
+										if id < 0 or id >= len(tab):
+											print("❌ L'index 'id' est hors de portée.")
+											return
+										emails_existants = [ligne[3] for i, ligne in enumerate(tab) if i != id and len(ligne) > 3]
+										while True:
+											choix = int(input("\nQue souhaitez-vous modifier ?\n1. Nom\n2. Prénom\n3. Mail\n4. Mot de passe\n5. Quitter\nVotre choix : "))
+											if choix == 1:
+												modif = input("\nQuel nom souhaitez-vous mettre ?\nNouveau nom : ").strip()
+												if not modif:
+													print("❌ Le nom ne peut pas être vide.")
+												else:
+													tab[id][1] = modif
+													print("\n✅ Modification enregistrée.")
+											elif choix == 2:
+												modif = input("\nQuel prénom souhaitez-vous mettre ?\nNouveau prénom : ").strip()
+												if not modif:
+													print("❌ Le prénom ne peut pas être vide.")
+												else:
+													tab[id][2] = modif
+													print("\n✅ Modification enregistrée.")
+											elif choix == 3:
+												modif = input("\nQuel mail souhaitez-vous mettre ?\nNouveau mail : ").strip()
+												if not modif:
+													print("❌ Le mail ne peut pas être vide.")
+												elif modif in emails_existants:
+													print("❌ Adresse mail déjà utilisée.")
+												else:
+													tab[id][3] = modif
+													print("\n✅ Modification enregistrée.")
+											elif choix == 4:
+												while True:
+													mdp = input("\nQuel mot de passe souhaitez-vous mettre ?\nNouveau mot de passe : ").strip()
+													if not mdp:
+														print("❌ Le mot de passe ne peut pas être vide.")
+														continue
+													mdp_hash = hashlib.sha256(mdp.encode('utf-8')).hexdigest()
+													if compare(mdp_hash):
+														print("\n❌ Mot de passe compromis. Choisissez-en un autre.")
+														continue
+													sel_ = sel()
+													mdp_sel = mdp + sel_
+													hashed_mdp = hashlib.sha256(mdp_sel.encode('utf-8')).hexdigest()
+													tab[id][4] = hashed_mdp
+													tab[id][5] = sel_
+													print("\n✅ Modification enregistrée.")
+													break
+											elif choix == 5:
+												print("\n⏪ Retour.")
+												break
+											else:
+												print("❌ Choix invalide.")
+											with open(fichier_users, 'w', newline='', encoding='utf-8') as fichier:
+												csv.writer(fichier).writerows(tab)
+									except ValueError:
+										print("❌ Entrez un choix valide.")
+									except FileNotFoundError:
+										print("\n❌ Le fichier utilisateur est introuvable.")
+								
+								# Connexion
+								def connect():
+									try:
+										while True:
+											with open(fichier_users, 'r', newline='', encoding='utf-8') as fichier:
+												tab = list(csv.reader(fichier))
+											if not tab:
+												print("\n⚠️  Aucun utilisateur n'est enregistré.")
+												return None
+											q_mail = input("\n📩  Mail : ")
+											utilisateur = None
+											for ligne in tab:
+												if q_mail == ' ':
+													print("\n❗  Votre mail ne peut pas être vide.")
+													break
+												elif q_mail == ligne[3]:
+													utilisateur = ligne
+													break
+											if utilisateur is None:
+												print("\n❌  L'email que vous avez renseigné n'existe pas. Veuillez réessayer.")
+												continue
+											mdp = input("🫣  Mot de passe : ")
+											mdp_sel = mdp + utilisateur[5]
+											mdp_bytes = mdp_sel.encode('utf-8')
+											hashed_mdp = hashlib.sha256(mdp_bytes).hexdigest()
+											if hashed_mdp == utilisateur[4]:
+												print(f"\n✅  Bienvenue, {utilisateur[1]} {utilisateur[2]} !")
+												compromis = check_password_pwned(hashed_mdp)
+												if compromis > 0:
+													print("\n--> 🚨  Attention, votre mot de passe est compromis. Pensez à le changer !")
+												id = utilisateur[0]
+												nom = utilisateur[1]
+												prenom = utilisateur[2]
+												mail = utilisateur[3]
+												while True:
+													print("\n=== Menu Principal ===")
+													choice = int(input("💭  Que souhaitez-vous faire ?\n1. Gestion de produits\n2. Gérer mon compte\n3. Déconnexion\nVotre choix : "))
+													if choice == 1:
+														gestion_produits.interaction(id, nom, prenom, mail)
+													elif choice == 2:
+														while True:
+															print("\n=== Menu de Gestion du Compte ===")
+															choice2 = int(input("💭  Que souhaitez-vous faire ?\n1. Modifier mon compte\n2. Supprimer mon compte\n3. Quitter\nVotre choix : "))
+															if choice2 == 1:
+																edit_com(id)
+															elif choice2 == 2:
+																del_com(id)
+															elif choice2 == 3:
+																print("\n ⏪  Retour.")
+																time.sleep(0.5)
+																break
+															else:
+																print("\n--> ⚠️  Je ne comprends pas ce que vous souhaitez.\n")
+													elif choice == 3:
+														print("\n🔌❌  Déconnexion.")
+														time.sleep(0.5)
+														return None
+													else:
+														print("\n--> ⚠️  Je ne comprends pas ce que vous souhaitez.\n")
+											else:
+												print("\n❌  Mot de passe incorrect. Veuillez réessayer.")
+									except FileNotFoundError:
+										print("\n--> ⚠️  Le fichier n'a pas été trouvé.")
+										return None
+							</p>
+
+							<h2>Pour convertir rockyou</h2>
+							<p>import csv
+								import hashlib
+								
+								def txt_to_csv_optimized(txt_file):
+									csv_file = txt_file.replace('.txt', '.csv')
+									try:
+										with open(txt_file, 'r', encoding='utf-8', errors='ignore') as infile, \
+											open(csv_file, 'w', newline='', encoding='utf-8') as outfile:
+											writer = csv.writer(outfile)
+											for line in infile:
+												hashed_line = hashlib.sha256(line.strip().encode('utf-8')).hexdigest()
+												writer.writerow([hashed_line])
+										print(f"Fichier CSV '{csv_file}' créé avec succès à partir de '{txt_file}'.")
+									except Exception as e:
+										print(f"Erreur : {e}")
+								
+								txt_file = "ressources/rockyou.txt"
+								txt_to_csv_optimized(txt_file)
+								</p>
+						</div>
+					</section>
+				</section>	
+			</div>
+
+		<!-- Footer -->
+			<footer id="footer" class="wrapper alt">
+				<div class="inner">
+					<ul class="menu">
+						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+						<li><a href="Intro programmatation.zip" class="button">intro programmation</a></li>
+						<li><a href="Dev web full stack.zip" class="button">dev web full stack</a></li>
+						<li><a href="Algo S1.html" class="button">Algo Semaine 1</a></li>
+						<li><a href="Algo S2.html" class="button">Algo Semaine 2</a></li>
+						<li><a href="Algo S3.html" class="button">Algo Semaine 3</a></li>
+						<li><a href="Algo TD.html" class="button">Algo TD</a></li>
+						<li><a href="Algo pandas.pdf" target="_blank" class="button">Algo Pandas</a></li>
+						<li><a href="Algo fichier.pdf" target="_blank" class="button">Algo fichier</a></li>
+					</ul>
+				</div>
+			</footer>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

@@ -1,0 +1,468 @@
+<!DOCTYPE HTML>
+<!--
+	Hyperspace by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Algo 1</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Header -->
+			<header id="header">
+				<a href="index.html" class="title">Portfolio Cyber</a>
+				<nav>
+					<ul>
+						<li><a href="Accueil.html">Accueil</a></li>
+						<li><a href="a-propos.html">À propos</a></li>
+						<li><a href="mois-cyber.html" >Le mois de la cyber</a></li>
+						<li><a href="Contact.html" >Contact</a></li>
+					</ul>
+				</nav>
+			</header>
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<section id="main" class="wrapper">
+						<div class="inner">
+							<h1 class="major">Algo 1</h1>
+							<h2>Main</h2>
+							<p>import fonctions 
+								import time
+								
+								def interaction():
+									print("🖖  Bienvenue sur votre logiciel de gestions de produits.")
+									time.sleep(0.5)
+									while True:
+										try:
+											choice = int(input("\n💭  Que souhaitez-vous faire ?\n1. Créer un fichier 'produits.txt'.\n2. Ajouter des produits.\n3. Voir les produits.\n4. Supprimer un produit.\n5. Recherche un produit.\n6. Trier les produits\n7. Quitter.\nVotre choix : "))
+											if choice == 1:
+												fonctions.creer_fichier_produits()
+												time.sleep(0.5)
+											elif choice == 2:
+												fonctions.ajouter_produit()
+												time.sleep(0.5)
+												print("\n")
+											elif choice == 3:
+												print("\n".strip())
+												fonctions.lire_produits()
+												print("\n".strip())
+												time.sleep(0.5)
+											elif choice == 4:
+												fonctions.suppr_produits()
+												print("\n".strip())
+												time.sleep(0.5)
+											elif choice == 5:
+												fonctions.recherche()
+												time.sleep(0.5)
+											elif choice == 6:
+												fonctions.trier()
+												time.sleep(0.5)
+											elif choice == 7:
+												print("\n✅  Merci d'avoir utilisé le gestionnaire de produits !\n©️ Baptiste AUSSANT & Elisabeth RIVIERE - 2024\n")
+												break
+											else:
+												print("\n--> ⚠️  Je ne comprends pas ce que vous souhaitez.\n")
+										except ValueError:
+											print("\n--> ⚠️  Veuillez renseigner un entier.\n")
+								
+								interaction()</p>
+							<br><br>
+
+							<h2>Fonctions</h2>
+							<p>import os
+								from random import choice
+								nom_fichier = "produits.txt"
+								
+								# Créer
+								
+								def creer_fichier_produits():
+									if not os.path.exists(nom_fichier):
+										try:
+											with open(nom_fichier, 'x') as fichier:
+												print("\n✅  Le fichier a été créé avec succès !")
+										except Exception as e:
+											print("\n--> ⚠️ Erreur inattendue :", e)
+									else:
+										file_size = os.stat(nom_fichier).st_size
+										if file_size != 0:
+											print("\n👌  Le fichier est déjà créé et contient des données.")
+										else:
+											print("\n👌  Le fichier est déjà créé mais est vide.")
+								
+								# Ajouter
+								
+								def ajouter_produit():
+									while True:
+										with open(nom_fichier, 'a') as fichier:
+											try:
+												nom = str(input("\nQuel est le nom du produit ?\n"))
+												prix = float(input("Quel est son prix ?\n"))
+												stock = int(input("Combien en reste t-il ?\n"))
+												fichier.write(nom)
+												fichier.write(" | ")
+												fichier.write(str(prix))
+												fichier.write("€")
+												fichier.write(" | ")
+												fichier.write(str(stock))
+												fichier.write("\n")
+											except ValueError:
+												print("\n--> ⚠️  Renseignez des entiers.\n")
+												ajouter_produit()
+										resp_reboot = input("\nSouhaitez-vous ajouter un nouveau produit ? (o/oui)\n- Réponse : ")
+										if resp_reboot == "o" or resp_reboot == "oui":
+											continue
+										else:
+											print("\n✅  Tous vos produits ont été ajouté !")
+											break
+								
+								# Lire
+								
+								def lire_produits():
+									try:
+										file_size = os.stat(nom_fichier).st_size
+										if file_size == 0:
+											print("😶‍🌫️  Le fichier est vide.")
+										else:
+											with open(nom_fichier, 'r') as fichier:
+												total_lignes = 0
+												for produits in fichier:
+													print(total_lignes, ". ", produits.strip())
+													total_lignes += 1
+									except FileNotFoundError:
+										print("\n--> ⚠️  Le fichier n'a pas été trouvé.")
+								
+								# Supprimer
+								
+								def suppr_produits():
+									try:
+										file_size = os.stat(nom_fichier).st_size
+										if file_size == 0:
+											print("\n😶‍🌫️  Le fichier est vide.")
+										else:
+											while True:
+												with open(nom_fichier, 'r') as fichier:
+													tab = []
+													for line in fichier:
+														tab.append([line])
+												lire_produits()
+												choix_suppr = input("\n 🚮  Numéro du produit que vous souhaitez supprimer (all = tout) : ")
+												
+												if choix_suppr == "all":
+													with open(nom_fichier, 'w') as fichier:
+														print("\n✅  Tous les produits ont bien été supprimés.")
+													break  # Sortir de la boucle après la suppression de tous les produits
+												try:
+													choix_suppr = int(choix_suppr)  # Convertir en entier si ce n'est pas "all"
+													with open(nom_fichier, 'r') as fichier:
+														lecture = fichier.readlines()
+														long = len(lecture)
+														if choix_suppr >= long or choix_suppr < 0:
+															print("\n--> ⚠️  Renseignez un produit existant.\n")
+															continue
+														tab.pop(choix_suppr)
+														with open(nom_fichier, 'w') as fichier:
+															for i in range(len(tab)):
+																fichier.write(tab[i][0])
+															print(f"\n✅  Le produit numéro {choix_suppr} a bien été supprimé.")
+															break
+												except ValueError:
+													print("\n--> ⚠️  Renseignez un entier valide ou 'all'.\n")
+									except FileNotFoundError:
+										print("\n--> ⚠️  Le fichier n'a pas été trouvé.")
+								
+								# Rechercher
+								
+								# Créer tableau (nom)
+								
+								def creer_tab():
+									with open(nom_fichier, 'r') as fichier:
+										tab = []
+										for line in fichier:
+											nom_produit = line.split('|')[0].strip()
+											tab.append(nom_produit)
+									return tab
+								
+								# Algorithme de tri (tri rapide)
+								
+								def tri_rapide(tab):
+									if len(tab) == 0:
+										return []
+									pivot = choice(tab)
+									t1, t2, t3 = [], [], []
+									for x in tab:
+										if x.lower() < pivot.lower():
+											t1.append(x)
+										elif x.lower() > pivot.lower():
+											t2.append(x)
+										else:
+											t3.append(x)
+									return tri_rapide(t1) + t3 + tri_rapide(t2)
+								
+								# Trier le fichier
+								
+								def trier_fichier():
+									with open(nom_fichier, 'r') as fichier:
+										tab = []
+										for line in fichier:
+											tab.append(line)
+								
+									tab_fichier_trie = tri_rapide(tab)
+								
+									with open(nom_fichier, 'w') as fichier:
+										for i in range(len(tab_fichier_trie)):
+											fichier.write(tab_fichier_trie[i])
+								
+									return tab_fichier_trie
+								
+								# Récupérer les informations du produit
+								
+								def infos_produit():
+									tab = trier_fichier()
+									return tab
+								
+								# Démarrer la recherche
+								
+								def start_recherche():
+									tab = creer_tab()
+									tab_trie = tri_rapide(tab)
+									return tab_trie
+								
+								# Recherche dichotomique
+								
+								def recherche_dicho(tab, v):
+									g = 0
+									d = len(tab) -1
+									v = v.lower()
+									while g <= d:
+										m = (g+d)//2
+										if v < tab[m].lower():
+											d = m - 1
+										elif v > tab[m].lower():
+											g = m + 1
+										else:
+											return m
+									return None
+								
+								# Recherche séquentielle
+								
+								def recherche_sequentielle(tab, v):
+									for i in range(len(tab)):
+										if tab[i] == v:
+											return i
+									return None
+								
+								# Fonction de recherche globale
+								
+								def recherche():
+									try:
+										while True:
+											try:
+												choix = int(input("\n❔  Quel algorithme souhaitez-vous utiliser ?\n1. Séquentiel\n2. Dichotomique\nVotre choix : "))
+												if choix == 1:
+													valeur_a_rechercher = input("\n🔎  Quel nom de produit cherchez-vous ?\nNom du produit : ")
+													infos = infos_produit()
+													resultat = recherche_sequentielle(creer_tab(), valeur_a_rechercher)
+													if resultat is not None:
+														print(f"\n✅  Produit trouvé à l'indice : {resultat}\n📜  Informations du produit : {infos[resultat]}")
+														break
+													else:
+														print("\n❌  Votre produit n'existe pas !")
+												elif choix == 2:
+													valeur_a_rechercher = input("\n🔎  Quel nom de produit cherchez-vous ?\nNom du produit : ")
+													tab_trie = start_recherche()
+													infos = infos_produit()
+													print(tab_trie)
+													resultat = recherche_dicho(tab_trie, valeur_a_rechercher)
+													if resultat is not None:
+														print(f"\n✅  Produit trouvé à l'indice : {resultat}\n📜  Informations du produit : {infos[resultat]}")
+														break
+													else:
+														print("\n❌  Votre produit n'existe pas !")
+												else:
+													print("\n--> ⚠️  Renseignez un entier valide.")
+											except ValueError:
+												print("\n--> ⚠️  Renseignez un entier.")
+									except FileNotFoundError:
+										print("\n--> ⚠️  Le fichier n'a pas été trouvé.")
+								
+								# Nos tris
+								
+								# tri à bulle
+								def tri_bulles(tab):
+									n = len(tab)
+									permut = True
+									while permut:
+										permut = False
+										for i in range(0, n-1):
+											if tab[i] > tab[i+1]:
+												tab[i], tab[i+1] = tab[i+1], tab[i]
+												permut = True
+										n = n-1
+									return tab
+								
+								# tri rapide - déjà fait
+								# Voir plus haut la section 'algorithme de tri (tri rapide)'
+								
+								# tri insertion
+								def tri_insertion(tab):
+									n = len(tab)
+									for i in range(1, n):
+										cle = tab[i]
+										j = i - 1
+										while j >= 0 and tab[j] > cle:
+											tab[j+1] = tab[j]
+											j = j - 1
+										tab[j+1] = cle
+									return tab
+								
+								# tri sélection
+								def tri_selection(tab):
+									n = len(tab)
+									for i in range(0, n-1):
+										min_indice = i
+										min = tab[i]
+										for j in range(i+1, n):
+											if tab[j] < min:
+												min_indice = j
+												min = tab[j]
+										tab[i], tab[min_indice] = tab[min_indice], tab[i]
+									return tab
+								
+								# Fonctions pour trier
+								
+								# trier par nom
+								
+								def trier_nom():
+									try:
+										with open(nom_fichier, 'r') as fichier:
+											tab = []
+											for line in fichier:
+												tab.append(line)
+								
+										tab_fichier_trie = tri_rapide(tab)
+								
+										with open(nom_fichier, 'w') as fichier:
+											for i in range(len(tab_fichier_trie)):
+												fichier.write(tab_fichier_trie[i])
+										print("\n".strip())
+										lire_produits()
+									except FileNotFoundError:
+										print("\n--> ⚠️  Le fichier n'a pas été trouvé.")
+								
+								# trier par prix
+								def trier_prix():
+									try:
+										with open(nom_fichier, 'r') as fichier:
+											tab = []
+											for line in fichier:
+												prix_produit = line.strip().split('|')
+												tab.append([element.strip() for element in prix_produit])
+										for i in range(len(tab)):
+											tab[i][0], tab[i][1] = tab[i][1], tab[i][0]
+											tab[i][0] = float(tab[i][0].replace('€', '').strip())
+										tri_bulles(tab)
+								
+										for i in range(len(tab)):
+											tab[i][0], tab[i][1] = tab[i][1], tab[i][0]
+								
+										with open(nom_fichier, 'w') as fichier:
+											for i in range(len(tab)):
+												fichier.write(tab[i][0])
+												fichier.write(" | ")
+												fichier.write(str(tab[i][1]))
+												fichier.write("€")
+												fichier.write(" | ")
+												fichier.write(tab[i][2])
+												fichier.write("\n")
+										print("\n".strip())
+										lire_produits()
+									except FileNotFoundError:
+										print("\n--> ⚠️  Le fichier n'a pas été trouvé.")
+								
+								# trier par stock
+								def trier_stock():
+									try:
+										with open(nom_fichier, 'r') as fichier:
+											tab = []
+											for line in fichier:
+												prix_produit = line.strip().split('|')
+												tab.append([element.strip() for element in prix_produit])
+										for i in range(len(tab)):
+											tab[i][0], tab[i][2] = tab[i][2], tab[i][0]
+											tab[i][0] = int(tab[i][0])
+											tab[i][1] = float(tab[i][1].replace('€', '').strip())
+										tri_selection(tab)
+								
+										for i in range(len(tab)):
+											tab[i][0], tab[i][2] = tab[i][2], tab[i][0]
+								
+										with open(nom_fichier, 'w') as fichier:
+											for i in range(len(tab)):
+												fichier.write(tab[i][0])
+												fichier.write(" | ")
+												fichier.write(str(tab[i][1]))
+												fichier.write("€")
+												fichier.write(" | ")
+												fichier.write(str(tab[i][2]))
+												fichier.write("\n")
+										print("\n".strip())
+										lire_produits()
+									except FileNotFoundError:
+										print("\n--> ⚠️  Le fichier n'a pas été trouvé.")
+								
+								# Fonction principale pour sélectioner notre tri
+								
+								def trier():
+									try:
+										choix = int(input("\n❔  Comment souhaitez-vous trier vos produits ?\n1. Trier par nom\n2. Trier par prix\n3. Trier par stock\nVotre choix : "))
+										if choix == 1:
+											trier_nom()
+										elif choix == 2:
+											trier_prix()
+										elif choix == 3:
+											trier_stock()
+									except ValueError:
+										print("\n--> ⚠️  Renseignez un entier.")
+							</p>
+						</div>
+					</section>
+				</section>	
+			</div>
+
+		<!-- Footer -->
+			<footer id="footer" class="wrapper alt">
+				<div class="inner">
+					<ul class="menu">
+						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+						<li><a href="Intro programmatation.zip" class="button">intro programmation</a></li>
+						<li><a href="Dev web full stack.zip" class="button">dev web full stack</a></li>
+						<li><a href="Algo S1.html" class="button">Algo Semaine 1</a></li>
+						<li><a href="Algo S2.html" class="button">Algo Semaine 2</a></li>
+						<li><a href="Algo S3.html" class="button">Algo Semaine 3</a></li>
+						<li><a href="Algo TD.html" class="button">Algo TD</a></li>
+						<li><a href="Algo pandas.pdf" target="_blank" class="button">Algo Pandas</a></li>
+						<li><a href="Algo fichier.pdf" target="_blank" class="button">Algo fichier</a></li>
+					</ul>
+				</div>
+			</footer>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

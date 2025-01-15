@@ -1,0 +1,315 @@
+<!DOCTYPE HTML>
+<!--
+	Hyperspace by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Algo TD</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Header -->
+			<header id="header">
+				<a href="index.html" class="title">Portfolio Cyber</a>
+				<nav>
+					<ul>
+						<li><a href="Accueil.html">Accueil</a></li>
+						<li><a href="a-propos.html">À propos</a></li>
+						<li><a href="mois-cyber.html" >Le mois de la cyber</a></li>
+						<li><a href="Contact.html" >Contact</a></li>
+					</ul>
+				</nav>
+			</header>
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<section id="main" class="wrapper">
+						<div class="inner">
+							<h1 class="major">Algo TD</h1>
+							<h2>Exercice 1</h2>
+							<p>Construire un algorithme qui nous calcule le Nième (avec N>2) terme de la suite de
+								FIBONACCI qui est définie par :
+								<img src="images/Exo 1 td algo.png">
+								Suite de FIBONACCI : 1, 1, 2, 3, 5, 8, 13, .......</p>
+							<br>
+							<p>def fibonacci(n):
+								if n <= 1:
+									return 1
+								a, b = 1, 1
+								for _ in range(2, n):
+									a, b = b, a + b
+								return b
+							
+							# Demander à l'utilisateur un nombre
+							try:
+								n = int(input("Entrez un nombre pour calculer la suite de Fibonacci : "))
+								if n < 0:
+									print("Veuillez entrer un nombre entier positif.")
+								else:
+									resultat = fibonacci(n)
+									print(f"Le {n}ᵉ nombre de Fibonacci est : {resultat}")
+							except ValueError:
+								print("Veuillez entrer un nombre entier valide.")
+							
+							fibonacci(n)</p>
+							<br><br>
+
+							<h2>Exercice 2</h2>
+							<p>Sachant qu'un nombre premier est un nombre qui n'accepte aucun diviseur excepté 1 et lui-
+								même. Construire la solution qui nous permet de savoir si un nombre est premier ou non.</p>
+							<br>
+							<p>def est_premier(n):
+								if n <= 1:
+									return False
+								for i in range(2, int(n**0.5) + 1):
+									if n % i == 0:
+										return False
+								return True
+							
+							# Demander à l'utilisateur un nombre à vérifier
+							try:
+								n = int(input("Entrez un nombre pour vérifier s'il est premier : "))
+								if est_premier(n):
+									print(f"Le nombre {n} est un nombre premier.")
+								else:
+									print(f"Le nombre {n} n'est pas un nombre premier.")
+							except ValueError:
+								print("Veuillez entrer un nombre entier valide.")
+							
+							est_premier(n)</p>
+							<br><br>
+
+							<h2>Exercice 3</h2>
+							<p>Sachant qu'il n'existe que 4 nombres compris entre 100 et 500 tels que la somme des cubes
+								des chiffres les composant est égale au nombre lui-même.
+								Construire la solution qui permet de retrouver ces 4 nombres.</p>
+							<br>
+							<p>def est_nombre_magique(n):
+								# Extraire les chiffres du nombre
+								chiffres = [int(chiffre) for chiffre in str(n)]
+								# Calculer la somme des cubes des chiffres
+								somme_cubes = sum(chiffre**3 for chiffre in chiffres)
+								# Vérifier si la somme des cubes est égale au nombre lui-même
+								return somme_cubes == n
+							
+							# Liste pour stocker les nombres qui satisfont la condition
+							nombres_magiques = []
+							
+							# Parcourir tous les nombres entre 100 et 500
+							for nombre in range(100, 501):
+								if est_nombre_magique(nombre):
+									nombres_magiques.append(nombre)
+							
+							# Afficher les résultats
+							print("Les nombres magiques entre 100 et 500 sont :")
+							print(nombres_magiques)</p>
+							<br><br>
+
+							<h2>Exercice 4</h2>
+							<p>Un nombre parfait est un nombre qui est égal à la somme de tous ses diviseurs excepté lui-
+								même. Rechercher tous les nombres parfaits compris entre 1 et N.
+								Exemple de nombre parfait : 6</p>
+							<br>
+							<p>def est_parfait(nombre):
+								# Trouver tous les diviseurs de nombre sauf lui-même
+								diviseurs = [i for i in range(1, nombre) if nombre % i == 0]
+								# Vérifier si la somme des diviseurs est égale au nombre
+								return sum(diviseurs) == nombre
+							
+							# Demander à l'utilisateur de saisir la valeur de n
+							try:
+								n = int(input("Entrez un nombre (N) pour trouver tous les nombres parfaits entre 1 et N : "))
+								if n < 1:
+									print("Veuillez entrer un nombre entier positif.")
+								else:
+									# Rechercher tous les nombres parfaits entre 1 et n
+									nombres_parfaits = [i for i in range(1, n + 1) if est_parfait(i)]
+									# Afficher les résultats
+									print(f"Les nombres parfaits entre 1 et {n} sont : {nombres_parfaits}")
+							except ValueError:
+								print("Veuillez entrer un nombre entier valide.")</p>
+							<br><br>
+
+							<h2>Exercice 5</h2>
+							<p>Comment convertir un nombre entier en binaire.Exemple : 29 en
+								base 10 donne 11101 en base 2.</p>
+							<br>
+							<p>def convertir_en_binaire(nombre):
+								binaire = ""
+								while nombre > 0:
+									binaire = str(nombre % 2) + binaire
+									nombre //= 2
+								return binaire
+							
+							# Demander à l'utilisateur de saisir un nombre
+							try:
+								nombre = int(input("Entrez un nombre entier à convertir en binaire : "))
+								if nombre < 0:
+									print("Veuillez entrer un nombre entier positif.")
+								elif nombre == 0:
+									print("Le binaire de 0 est : 0")
+								else:
+									binaire = convertir_en_binaire(nombre)
+									print(f"Le nombre {nombre} en binaire est : {binaire}")
+							except ValueError:
+								print("Veuillez entrer un nombre entier valide.")</p>
+							<br><br>
+
+							<h2>Exercice 7</h2>
+							<p>Le jeu de Marienbad se joue à deux avec 17 allumettes. Chaque joueur peut prendre à chaque
+								fois 1, 2 ou 3 allumettes. Le gagnant est celui qui prend la dernière allumette. Comment gagner à coup sûr ?
+								Ecrire un algorithme qui permet à une personne de choisir qui commence puis de jouer au Marienbad contre
+								votre solution.</p>
+							<br>
+							<p>def marienbad():
+								# Fonction pour vérifier si le nombre d'allumettes prises est valide
+								def choix_valide(choix):
+									return 1 <= choix <= 3
+							
+								# Fonction qui calcule le choix de l'ordinateur
+								def choix_ordinateur(allumettes):
+									# Stratégie gagnante : Laisser un multiple de 4 allumettes après son tour
+									for prise in range(1, 4):
+										if (allumettes - prise) % 4 == 0:
+											return prise
+									# Si aucune stratégie optimale, prendre 1 allumette
+									return 1
+							
+								# Initialisation
+								allumettes = 17
+								print("Bienvenue au jeu de Marienbad !")
+								premier = input("Qui commence ? Tapez 'joueur' pour vous ou 'ordinateur' pour que l'ordinateur commence : ").strip().lower()
+							
+								# Validation de l'entrée utilisateur
+								if premier not in ['joueur', 'ordinateur']:
+									print("Entrée invalide. L'ordinateur commence par défaut.")
+									premier = 'ordinateur'
+							
+								# Boucle principale du jeu
+								joueur_actuel = premier
+								while allumettes > 0:
+									print(f"\nIl reste {allumettes} allumettes.")
+							
+									if joueur_actuel == 'joueur':
+										# Tour du joueur
+										try:
+											choix = int(input("Combien d'allumettes prenez-vous (1, 2 ou 3) ? "))
+											if not choix_valide(choix) or choix > allumettes:
+												print("Choix invalide. Veuillez choisir entre 1 et 3 allumettes.")
+												continue
+										except ValueError:
+											print("Veuillez entrer un nombre valide.")
+											continue
+									else:
+										# Tour de l'ordinateur
+										choix = choix_ordinateur(allumettes)
+										print(f"L'ordinateur prend {choix} allumette(s).")
+							
+									# Mettre à jour le nombre d'allumettes restantes
+									allumettes -= choix
+							
+									# Vérifier si le jeu est terminé
+									if allumettes == 0:
+										if joueur_actuel == 'joueur':
+											print("Félicitations, vous avez gagné !")
+										else:
+											print("L'ordinateur a gagné. Mieux vaut réfléchir à une nouvelle stratégie !")
+										break
+							
+									# Changer de joueur
+									joueur_actuel = 'joueur' if joueur_actuel == 'ordinateur' else 'ordinateur'
+							
+							# Appeler la fonction principale pour lancer le jeu
+							marienbad()</p>
+							<br><br>
+
+							<h2>Exercice 8</h2>
+							<p>Construire la solution qui effectue un swapping, autrement dit qui échange lesoctets de poids
+								fort et de poids faible d'un nombre entier quelconque.
+							<img src="images/Exo 8 td algo.png">
+							</p>
+							<br>
+							<p>Partie qui s'en rapproche le plus <br> def swapping(n):
+								s = str(abs(n))
+								swapped = int(s[::-1]) * (-1 if n < 0 else 1)
+								return swapped								
+							</p>
+							<br><br>
+
+							<h2>Exercice 9</h2>
+							<p>A partir d’un nombre entier N on voudrait obtenir deux autres nombres N1 et N2. Le premier
+								(N1) sera constitué par les chiffres pairs de N et le second (N2) par les chiffres impairs.Exemples :
+							<img src="images/Exo 9 td algo.png">
+							</p>
+							<br>
+							<p>def separer_chiffres(n):
+								pairs = ''.join(c for c in str(n) if int(c) % 2 == 0)
+								impairs = ''.join(c for c in str(n) if int(c) % 2 != 0)
+								return int(pairs or 0), int(impairs or 0)
+							
+							# Demander à l'utilisateur de saisir un nombre
+							n = int(input("Veuillez entrer un nombre : "))
+							pairs, impairs = separer_chiffres(n)
+							
+							print(f"Chiffres pairs : {pairs}")
+							print(f"Chiffres impairs : {impairs}")</p>
+							<br><br>
+
+							<h2>Exercice 10</h2>
+							<p>Construire la solution qui permet l’addition de deux nombres binaires.
+							<img src="images/Exo 10 td algo.png">
+							</p>
+							<br>
+							<p>def addition_binaire(a, b):
+								a = str(a)
+								b = str(b)
+								return bin(int(a, 2) + int(b, 2))[2:]
+							
+							# Demander à l'utilisateur de saisir les nombres binaires a et b
+							a = input("Veuillez entrer le premier nombre binaire (a) : ")
+							b = input("Veuillez entrer le deuxième nombre binaire (b) : ")
+							
+							resultat = addition_binaire(a, b)
+							print(f"Le résultat de l'addition binaire est : {resultat}")</p>
+							<br><br>
+						</div>
+					</section>
+				</section>	
+			</div>
+
+		<!-- Footer -->
+			<footer id="footer" class="wrapper alt">
+				<div class="inner">
+					<ul class="menu">
+						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+						<li><a href="Intro programmatation.zip" class="button">intro programmation</a></li>
+						<li><a href="Dev web full stack.zip" class="button">dev web full stack</a></li>
+						<li><a href="Algo S1.html" class="button">Algo Semaine 1</a></li>
+						<li><a href="Algo S2.html" class="button">Algo Semaine 2</a></li>
+						<li><a href="Algo S3.html" class="button">Algo Semaine 3</a></li>
+						<li><a href="Algo TD.html" class="button">Algo TD</a></li>
+						<li><a href="Algo pandas.pdf" target="_blank" class="button">Algo Pandas</a></li>
+						<li><a href="Algo fichier.pdf" target="_blank" class="button">Algo fichier</a></li>
+					</ul>
+				</div>
+			</footer>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
